@@ -7,3 +7,13 @@ psycopg2-binary
 gunicorn
 uvicorn
 whitenoise
+mkdocs
+proselint
+gitdb2
+mkdocs-git-revision-date-localized-plugin
+mkdocs-minify-plugin
+mkdocs-material
+mkdocs-section-index
+pymdown-extensions
+mkdocs-autolinks-plugin>=0.5.0
+mkdocs-exclude-search>=0.6.4
