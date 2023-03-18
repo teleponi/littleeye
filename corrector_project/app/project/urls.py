@@ -11,9 +11,6 @@ urlpatterns = [
     path("accounts/", include("user.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     path("admin/", admin.site.urls),
-    path("events/", include("events.urls")),
-    path("orders/", include("orders.urls")),
-    path("", RedirectView.as_view(url="events/")),
 ]
 
 # if settings.DEBUG:
