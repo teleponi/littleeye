@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block head%}
+<h1>neue Artikel hinzufügen</h1>
+{% endblock %}
+
+{% block content %}
+
+<style>
+.hidden {
+    display:none;
+}
+.help-block{
+    display:none;
+}
+</style>
+
+{% if formset.non_form_errors %}
+    <div class="container-fluid p-0">
+        <div class="alert alert-danger">{{formset.non_form_errors}}</div>
+    </div>
+{% endif %}
+
+
+{% crispy formset helper %}
+
+
+<section style="margin-top:100px">
+<table class="table table-bordered">
+    <thead class="thead-dark">
+    <tr>
+        <td scope="col">Name</td>
+        <td scope="col">Type</td>
+        <td scope="col">Preis</td>
+        <td scope="col">-</td>
+    </tr>
+    </thead>
+    {% for order in orders %}
+    <tr>
+        <td>{{order.name}}</td>
+        <td>{{order.ordertype}}</td>
+        <td>{{order.price}}</td>
+
+    </tr>
+    {% endfor %}
+</table>
+
+<script>
+
+window.addEventListener('load', (event) => {
+
+    // base row from django formset template, used to clone
+    let select = ".empty-form";
+
+    // select elements from DOM
+    let firstRow = document.querySelector(select);
+    let container = document.querySelector("#form-container table")
+    let addButton = document.querySelector("#button-id-button")
+    let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+
+    let formNum = parseInt(totalForms.value) - 1;
+    addButton.addEventListener('click', addFormRow);
+
+    function updateFormRows(e){
+      e.preventDefault();
+      let totalForms = document.querySelector("#id_form-TOTAL_FORMS")
+      print(totalForms);
+    }
+
+
+    /*function to add new Row with input elements to existing form
+    */
+    function addFormRow(e) {
+        /*on Event e, add a new form row to the form.
+        e is a button click event in this case.
+        */
+
+        // prevent whatever button click would do..
+        e.preventDefault()
+
+        // clone base row and set default classname to none
+        let row = firstRow.cloneNode(true);
+        row.className = "";
+
+        // define Regex for updating template form number. incrment
+        let formRegex = RegExp(`form-(__prefix__){1}-`,'g');
+        formNum++
+
+        // replace prefix with formnumber
+        row.innerHTML = row.innerHTML.replace(formRegex, `form-${formNum}-`)
+
+        // just add the bootstrap form-control class to input elements
+        // extend if necessary
+        inputElements = "input, textarea, select";
+        for (let element of row.children) {
+            let inputField = element.querySelector(inputElements);
+            if(inputField !== null) {
+                inputField.classList.add('form-control');
+            }
+        }
+        // append new row in table
+        container.appendChild(row);
+        totalForms.setAttribute('value', `${formNum+1}`);
+    }
+
+})
+</script>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block head%}
+Restriere dich!
+{% endblock %}
+
+{% block content %}
+<form method="post">
+  {% csrf_token %}
+{{ form|crispy }}
+<button type="submit" class="btn btn-primary">jetzt registriren</button>
+</form>
+{% endblock %}

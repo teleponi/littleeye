@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}
+Detailseite des Events {{object}}
+{% endblock %}
+
+{% block head %}
+{{object}}
+{% endblock %}
+
+{% block content %}
+<a href="{% url 'events:events' %}">Zurück zur Übersicht</a> |
+<a href="{% url 'events:event_delete' object.pk %}">Event löschen</a>
+
+<h2>{{object.sub_title}}</h2>
+<p>Termin: {{object.date}}</p>
+
+<h3>Beschreibung</h3>   
+<p>{{object.description}}</p>
+    
+<h3>Ähnliche Events</h3>   
+<ul>
+{% for event in object.related_events %}
+    <li>{{event}}</li>
+{% endfor %}
+</ul>
+
+{% endblock %}
