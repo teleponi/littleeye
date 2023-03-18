@@ -10,7 +10,7 @@ nav:
           - einleitung: content/einleitung.md
           - anmeldung: content/anmeldung.md
       - Kapitel 2,  Troubleshooting:
-          - dmesg: linuxbook/booting.md
+          - Fehler: content/fehler.md
   - Contact: contact.md
 
 plugins:
