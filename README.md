@@ -2,6 +2,7 @@
 Beispiel für ein dockerized Django Project mit `gunicorn`, `Postgres` und
 `nginx`
 
+
 ## Settings anpassen
 
 ### .env
