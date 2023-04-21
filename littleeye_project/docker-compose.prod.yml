@@ -26,7 +26,3 @@ volumes:
   postgres_data_little:
   static_volume_little:
 
-networks:
-  default:
-    external: true
-    name: proxymanager_default
