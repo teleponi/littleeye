@@ -1,5 +1,5 @@
 ---
-site_name: Corrector Benutzerhandbuch 
+site_name: Little Eye Benutzerhandbuch 
 site_description: Wie bedient man das Programm? 
 site_author: Bernd, Tom, Asiye 
 site_url: 
@@ -90,5 +90,5 @@ extra:
   social:
     - icon: fontawesome/brands/github-alt
 
-repo_name: teleponi/corrector
-repo_url: https://github.com/teleponi/corrector
+repo_name: teleponi/littleeye
+repo_url: https://github.com/teleponi/littleeye

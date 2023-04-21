@@ -26,7 +26,6 @@ class UserAdmin(UserAdmin):
             },
         ),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
-        ("Additional info", {"fields": ("address",)}),
     )
 
     add_fieldsets = (
@@ -46,6 +45,6 @@ class UserAdmin(UserAdmin):
             },
         ),
         ("Important dates", {"fields": ("last_login", "date_joined")}),
-        ("Additional info", {"fields": ("address",)}),
     )
-    list_display = ["id", "address", "username", "role"]
+    list_display = ["id", "username", "role"]
+    list_display_links = ("username", "id")

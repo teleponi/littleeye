@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<h1 class="display-6 fw-bold lh-1">{{object.name}}</h1>
+
+<p>
+am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
+</p>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="row">
+<div class="col-lg-8 col-sm-12">
+
+<h3>Beschreibung</h3>
+<p>{{object.description}}</p>
+
+
+</div>
+</div>
+</div>
+
+{%endblock%}

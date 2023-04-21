@@ -1,7 +1,48 @@
-# Corrector
-Beispiel für ein dockerized Django Project mit `gunicorn`, `Postgres` und
-`nginx`
+# LittleEye - Korrekturmanagementsystem
 
+## 1. Programm ohne Docker starten 
+
+    cd littleye_project/app
+
+### Environment anlegen 
+Falls noch kein virtuelles Environment auf dem lokalen Rechner für 
+dieses Projekt angelegt wurde, muss das jetzt gemacht werden.
+
+    python -m venv env
+
+Es sollte jetzt ein Verzeichnis unter `littleeye_project/app/env` exisitieren.
+
+### Enviroment starten
+für Mac / Linux / Unix
+
+    source env/bin/activate
+
+für Windows
+
+    .\env\Scripts\activate
+    
+### für dieses Environment pip-tools installieren
+
+    (env) pip install pip-tools
+
+### Dependencies kompilieren und installieren
+
+    (env) pip-compile requirements.in
+    (env) pip-compile requirements-dev.in
+    (env) pip-sync requirements.txt requirements-dev.txt 
+
+### .env-Datei anlegen
+Falls noch nicht getan, muss eine .env-Datei angelegt werden, in der die
+lokalen Settings liegen. Dazu einfach die env.example kopieren.
+
+
+
+### Testuser anlegen
+
+    (env) python manage.py create_user n=10  
+    
+
+http://127.0.0.1:1337
 
 ## Settings anpassen
 

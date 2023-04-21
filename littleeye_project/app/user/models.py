@@ -3,14 +3,10 @@ from django.contrib.auth.models import AbstractUser
 
 
 class User(AbstractUser):
-    """unser Model erbt von Abstract User."""
-
-    address = models.CharField(max_length=250, blank=True, null=True)
-
     class Role(models.TextChoices):
         ADMIN = "ADMIN", "Admin"
-        MODERATOR = "MODERATOR", "Moderator"
-        PREMIUM = "PREMIUM", "Premium User"
+        TUTOR = "TUTOR", "Tutor"
+        STUDENT = "STUDENT", "Student"
 
     base_role = Role.ADMIN
     role = models.CharField(max_length=50, choices=Role.choices)

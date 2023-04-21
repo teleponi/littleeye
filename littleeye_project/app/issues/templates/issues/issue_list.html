@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block head %}
+<h1 class="display-6 fw-bold lh-1">Issue Übersicht</h1>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="row">
+<div class="col-lg-8 col-sm-12">
+
+<p>
+<a href="{% url 'issues:issue_create' %}">
+<button class="btn btn-primary">neues Issue anlegen</button>
+</a>
+</p>
+
+
+
+<ul class="list-group issue_box">
+
+{% for issue in object_list %}
+<a href="{% url 'issues:issue_detail' issue.pk%}">
+<li class="list-group-item rounded">
+<small><span>am {{issue.date}}</span></small><br>
+<b>{{issue.name}}</b>
+<span class="badge rounded-pill bg-primary">{{issue.severity}}</span>
+<p>by {{issue.author}}</p>
+</li>
+</a>
+
+{% endfor %}
+</ul>
+
+{% include "../snippets/paginator.html" %}
+
+
+
+</div>
+</div>
+</div>
+
+{%endblock%}

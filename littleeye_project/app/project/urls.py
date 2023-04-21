@@ -11,11 +11,13 @@ urlpatterns = [
     path("accounts/", include("user.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     path("admin/", admin.site.urls),
+    path("", include("issues.urls")),
+    # path("", RedirectView.as_view(url="events/categories")),
 ]
 
-# if settings.DEBUG:
-# import debug_toolbar
+if settings.DEBUG:
+    import debug_toolbar
 
-# urlpatterns = [
-# path("__debug__/", include(debug_toolbar.urls)),
-# ] + urlpatterns
+urlpatterns = [
+    path("__debug__/", include(debug_toolbar.urls)),
+] + urlpatterns

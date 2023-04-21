@@ -1,18 +1,41 @@
 from pathlib import Path
 import environ
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# hier .env angeben, wenn Docker
 environ.Env.read_env(BASE_DIR / ".env")
 env = environ.Env(
-    DEBUG=(bool, False),  # von str abweichender Datentyp
-    SQL_ENGINE=(str,),
+    DEBUG=(bool, False),
+    DOCKER=(bool, False),
 )
 
 SECRET_KEY = env("SECRET_KEY")
 DEBUG = env("DEBUG")
+DOCKER = env("DOCKER")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+
+
+if DOCKER:
+    DATABASES = {
+        "default": {
+            "ENGINE": env("SQL_ENGINE", default="django.db.backends.sqlite3"),
+            "NAME": env("SQL_DATABASE", default=str(BASE_DIR / "db.sqlite3")),
+            "USER": env("SQL_USER", default="user"),
+            "PASSWORD": env("SQL_PASSWORD", default="password"),
+            "HOST": env("SQL_HOST", default="localhost"),
+            "PORT": env("SQL_PORT", default="5432"),
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 # Port angabe istwichtig
 CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1", "http://127.0.0.1:1337"]
 
@@ -26,12 +49,9 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "crispy_bootstrap5",
     "crispy_forms",
-    "events",
     "user",
-    "orders",
+    "issues",
 ]
-print("SECRET KEY: ", SECRET_KEY)
-print("DEBUG: ", DEBUG)
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
@@ -53,11 +73,10 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-# if DEBUG:
-# INSTALLED_APPS.extend(["debug_toolbar", "django_extensions"])
-# INTERNAL_IPS = ("127.0.0.1",)
-
-# MIDDLEWARE.extend(["debug_toolbar.middleware.DebugToolbarMiddleware"])
+if DEBUG:
+    INSTALLED_APPS.extend(["debug_toolbar", "django_extensions"])
+    INTERNAL_IPS = ("127.0.0.1",)
+    MIDDLEWARE.extend(["debug_toolbar.middleware.DebugToolbarMiddleware"])
 
 ROOT_URLCONF = "project.urls"
 
@@ -79,20 +98,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "project.wsgi.application"
-
-
-# Database
-if DEBUG:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
-
-else:
-    DATABASES = {"default": env.db()}
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
