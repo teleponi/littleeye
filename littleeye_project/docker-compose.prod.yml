@@ -24,3 +24,8 @@ volumes:
   static_volume:
   postgres_data:
     driver: local
+
+networks:
+  default:
+    external: true
+    name: proxymanager_default
