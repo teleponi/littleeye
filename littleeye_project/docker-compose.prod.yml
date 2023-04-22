@@ -5,11 +5,11 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile.prod
-    command: gunicorn --bind 0.0.0.0:8000 project.asgi -w 4 -k uvicorn.workers.UvicornWorker
+    command: gunicorn --bind 0.0.0.0:8001 project.asgi -w 4 -k uvicorn.workers.UvicornWorker
     volumes:
       - static_volume_little:/home/app/web/staticfiles
     expose:
-      - 8000
+      - 8001
     env_file:
       - ././app/.env.prod
     depends_on:
