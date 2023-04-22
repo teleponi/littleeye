@@ -14,8 +14,6 @@ services:
       - dbi
   dbi:
     image: postgres:14.0-alpine
-    ports: 
-      - "5433:5432"
     volumes:
       - postgres_data_little:/var/lib/postgresql/data/
     env_file:
