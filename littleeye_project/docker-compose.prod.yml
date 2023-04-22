@@ -14,7 +14,7 @@ services:
       - ././app/.env.prod
     depends_on:
       - db
-  dbi:
+  db:
     image: postgres:14.0-alpine
     ports: 
       - "5433:5432"
