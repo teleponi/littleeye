@@ -170,7 +170,7 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
-        "event_manager.events": {
+        "issues": {
             "handlers": ["console"],
             "level": "WARNING",
             "propagate": False,
