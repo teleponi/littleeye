@@ -37,7 +37,11 @@ else:
         }
     }
 # Port angabe istwichtig
-CSRF_TRUSTED_ORIGINS = ["http://127.0.0.1", "http://127.0.0.1:1337"]
+CSRF_TRUSTED_ORIGINS = [
+    "http://127.0.0.1",
+    "http://127.0.0.1:1337",
+    "https://littleeye.spielprinzip.com",
+]
 
 INSTALLED_APPS = [
     "whitenoise.runserver_nostatic",
