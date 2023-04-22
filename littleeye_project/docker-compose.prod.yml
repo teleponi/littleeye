@@ -13,8 +13,8 @@ services:
     env_file:
       - ././app/.env.prod
     depends_on:
-      - db
-  db:
+      - dbi
+  dbi:
     image: postgres:14.0-alpine
     ports: 
       - "5433:5432"
