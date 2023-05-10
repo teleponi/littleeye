@@ -2,3 +2,6 @@
 __pycache__/
 .env
 staticfiles
+.env.prod
+.env.local
+.env.db
