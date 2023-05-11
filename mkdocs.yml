@@ -6,11 +6,19 @@ site_url:
 nav:
   - Introduction: index.md
   - Benutzerhandbuch:
-      - Kapitel 1, Einleitung:
+      - Einleitung:
           - einleitung: content/einleitung.md
+      - Authentifizierung:
           - anmeldung: content/anmeldung.md
-      - Kapitel 2,  Troubleshooting:
-          - Fehler: content/fehler.md
+      - Studentensicht:
+          - dashboard: content/dashboard-student.md
+          - funktionen: content/studenten-funktionen.md
+      - Tutorensicht:
+          - dashboard-tutor: content/dashboard-tutor.md
+          - funktionen: content/tutoren-funktionen.md
+      - Allgemeines:
+          - FAQ: content/faq.md
+          - Troubleshooting: content/troubleshooting.md
   - Contact: contact.md
 
 plugins:

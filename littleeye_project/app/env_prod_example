@@ -1,0 +1,12 @@
+DOCKER=True
+DEBUG=False
+ALLOWED_HOSTS=*
+SECRET_KEY=9asjf3909890d98$=asdfkljlkajeiasfoeiaalf
+SQL_ENGINE=django.db.backends.postgresql
+DATABASE_URL=postgres://postgres:postgres@db:5432/postgres
+SQL_DATABASE=postgres
+SQL_USER=postgres
+SQL_PASSWORD=postgres
+SQL_HOST=db
+SQL_PORT=5432
+DATABASE=postgres
