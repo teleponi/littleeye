@@ -1,5 +1,5 @@
 ---
-site_name: Little Eye Benutzerhandbuch 
+site_name: LittleEye Korrekturmanagementsystem
 site_description: Wie bedient man das Programm? 
 site_author: Bernd, Tom, Asiye 
 site_url: 
@@ -11,21 +11,18 @@ nav:
       - Authentifizierung:
           - anmeldung: content/anmeldung.md
       - Studentensicht:
-          - dashboard: content/dashboard-student.md
-          - funktionen: content/studenten-funktionen.md
+          - das Studenten-Dashboard: content/dashboard-student.md
+          - Funktionsübersicht: content/studenten-funktionen.md
       - Tutorensicht:
-          - dashboard-tutor: content/dashboard-tutor.md
-          - funktionen: content/tutoren-funktionen.md
+          - das Tutoren-Dashboard: content/dashboard-tutor.md
+          - Funktionsübersicht: content/tutoren-funktionen.md
       - Allgemeines:
           - FAQ: content/faq.md
           - Troubleshooting: content/troubleshooting.md
-  - Contact: contact.md
+  - Contact: content/contact.md
 
 plugins:
   - search
-  - exclude-search:
-      exclude:
-        - newsletter/*
   - autolinks
   - git-revision-date-localized:
       type: timeago
@@ -63,7 +60,7 @@ markdown_extensions:
 theme:
   name: material
   custom_dir: theme
-  logo: img/logo.bmp
+  logo: img/littleeye-logo.png
   features:
     - navigation.instant
     - navigation.top
