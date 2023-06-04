@@ -6,5 +6,5 @@ author: realcaptainsolaris
 
 I'm available through:
 
-* Email: `hello` at `spielprinzip.com`
+* Email: `info` at `example.com`
 
