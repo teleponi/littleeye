@@ -1,8 +1,15 @@
 from django.db import models
+from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator, MaxLengthValidator
+from courses.models import Course
 
 User = get_user_model()
+
+
+# class CreatedByMixin(models.Model):
+# created_at = models.ForeignKey(User, on_delete=models.SET_NULL)
+# updated_by = models.ForeignKey(User, on_delete=models.SET_NULL)
 
 
 class DateMixin(models.Model):
@@ -41,6 +48,9 @@ class MediaType(models.Model):
     )
     icon = models.CharField(max_length=19)
 
+    def __str__(self):
+        return self.name
+
 
 class Issue(DateMixin):
     """Repräsentiert einen Issue.
@@ -56,12 +66,11 @@ class Issue(DateMixin):
 
     name = models.CharField(
         max_length=100,
-        unique=True,
         validators=[MinLengthValidator(3, message="Custom")],
     )
 
     description = models.TextField(null=True, blank=True, validators=[])
-
+    course = models.ForeignKey(Course, on_delete=models.PROTECT, related_name="issues")
     is_active = models.BooleanField(default=True)
     severity = models.IntegerField(choices=Severity.choices)
 
@@ -73,9 +82,12 @@ class Issue(DateMixin):
 
     class Meta:
         ordering = ["name"]
+        constraints = [
+            models.UniqueConstraint(fields=["author", "name"], name="unique_author"),
+        ]
 
     def __str__(self) -> str:
         return self.name
 
     def get_absolute_url(self) -> str:
-        return reverse("eye:issue_detail", kwargs={"pk": str(self.pk)})
+        return reverse("issues:issue_detail", kwargs={"pk": str(self.pk)})

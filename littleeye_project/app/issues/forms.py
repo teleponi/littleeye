@@ -22,8 +22,9 @@ class IssueForm(forms.ModelForm):
                 "Pflichtinfos",
                 "name",
                 "severity",
-                "author",
+                #                "author",
                 "media_type",
+                "course",
             ),
             Fieldset(
                 "Beschreibung",
@@ -44,3 +45,4 @@ class IssueForm(forms.ModelForm):
     class Meta:
         model = Issue
         fields = "__all__"
+        exclude = ("author",)
