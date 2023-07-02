@@ -1,8 +1,10 @@
 from django.db import models
+from django.db.models.fields import related
 from django.urls import reverse
 from django.contrib.auth import get_user_model
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from courses.models import Course
+from .managers import EnhancedManager, IssueQuerySet
 
 User = get_user_model()
 
@@ -21,7 +23,6 @@ class DateMixin(models.Model):
 
 
 class Tag(models.Model):
-    description = models.TextField(blank=True, null=True)
     icon = models.CharField(max_length=19)
     name = models.CharField(
         max_length=99,
@@ -52,11 +53,23 @@ class MediaType(models.Model):
         return self.name
 
 
+# class IssueHistory():
+# """Der Lebenszyklus eines Issues in der History-Tabelle."""
+
+# issue = models.ManyToManyField(Issue, related_name="issues")
+# status = models.IntegerField()
+
+
 class Issue(DateMixin):
     """Repräsentiert einen Issue.
 
     related to :model:`issues.MediaType` and :model:`user.User`.
     """
+
+    class Status(models.IntegerChoices):
+        IN_PROGRESS = 1, "in Bearbeitung"
+        CLOSED = 2, "geschlossen"
+        RE_OPENED = 3, "wiedergeöffnet"
 
     class Severity(models.IntegerChoices):
         MINOR = 1, "unbedeutend"
@@ -64,21 +77,31 @@ class Issue(DateMixin):
         URGENT = 3, "dringend"
         LARGE = 4, "sofort"
 
+    updated_by = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name="iusses"
+    )
     name = models.CharField(
         max_length=100,
         validators=[MinLengthValidator(3, message="Custom")],
     )
-
-    description = models.TextField(null=True, blank=True, validators=[])
+    location = models.CharField(
+        max_length=100,
+        validators=[MinLengthValidator(3)],
+        blank=True,
+        null=True,
+        help_text="Wo ist der Fehler aufgetreten? Zeile, Minute, Seite, ect.",
+    )
+    description = models.TextField(validators=[])
     course = models.ForeignKey(Course, on_delete=models.PROTECT, related_name="issues")
     is_active = models.BooleanField(default=True)
     severity = models.IntegerField(choices=Severity.choices)
-
+    status = models.IntegerField(choices=Status.choices, default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="issues")
     media_type = models.ForeignKey(
         MediaType, on_delete=models.PROTECT, related_name="issues"
     )
     tags = models.ManyToManyField(Tag, related_name="issues", blank=True)
+    objects = EnhancedManager.from_queryset(IssueQuerySet)()
 
     class Meta:
         ordering = ["name"]

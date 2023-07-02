@@ -1,6 +1,22 @@
+from re import I
 from django import template
 
 register = template.Library()
+
+
+@register.filter
+def severity_bootstrap(value):
+    color = ""
+    match value:
+        case "unbedeutend":
+            color = "primary"
+        case "sofort":
+            color = "danger"
+        case "dringend":
+            color = "warning"
+        case _:
+            color = "primary"
+    return color
 
 
 @register.simple_tag(takes_context=True)

@@ -4,5 +4,5 @@ from .models import Course
 
 @admin.register(Course)
 class CourseAdmin(admin.ModelAdmin):
-    search_fields = ["name"]
-    list_display = ("name",)
+    search_fields = ["name", "tutor"]
+    list_display = ("name", "tutor")

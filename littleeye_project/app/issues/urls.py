@@ -6,24 +6,34 @@ app_name = "issues"
 
 urlpatterns = [
     path(
-        "issue/create",
+        "create",
         views.IssueCreateView.as_view(),
         name="issue_create",
     ),
+    # path(
+    # "<int:pk>/update",
+    # views.IssueUpdateView.as_view(),
+    # name="issue_update",
+    # ),
     path(
-        "issue/<int:pk>/update",
-        views.IssueUpdateView.as_view(),
-        name="issue_update",
-    ),
-    path(
-        "issue/<int:pk>/delete",
+        "<int:pk>/delete",
         views.IssueDeleteView.as_view(),
         name="issue_delete",
     ),
     path(
-        "issue/<int:pk>",
+        "<int:pk>",
         views.IssueDetailView.as_view(),
         name="issue_detail",
     ),
-    path("issues", views.IssueListView.as_view(), name="issues"),
+    path("", views.IssueListView.as_view(), name="issues"),
+    path(
+        "issue/<int:pk>",
+        views.IssueDetailTutorView.as_view(),
+        name="issue_detail_tutor",
+    ),
+    path(
+        "issue/<int:pk>/update",
+        views.IssueUpdateTutorView.as_view(),
+        name="issue_update_tutor",
+    ),
 ]

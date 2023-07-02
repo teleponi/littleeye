@@ -38,6 +38,11 @@ Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.auth
   <li>aktueller Status: <b>{{object.get_status_display}}</b></li>
 </ul>
 
+{% if object.course.lecturer == user %}
+<a href="{% url 'issues:issue_update_tutor' %}">
+<button>Ticket bearbeiten</button>
+</a>
+{% endif %}
 </div>
 
 

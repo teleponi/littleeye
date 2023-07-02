@@ -1,23 +1,41 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
+{% load pagestags %}
 
 {% block head %}
+{% if object %}
 <h1 class="display-6 fw-bold lh-1">{{object.name}}</h1>
-
 <p>
 am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
 </p>
+{% else %}
+<h1 class="display-6 fw-bold lh-1">Neues Ticket anlegen</h1>
+<p>
+{% endif %}
+
 
 {% endblock %}
 
 {% block content %}
 <div class="container">
 <div class="row">
-<div class="col-lg-8 col-sm-12">
+<div class="col-lg-9 col-sm-12">
 
 {% crispy form form.helper %}
 
 </div>
+<div class="col-lg-3 col-sm-12">
+{% if object %}
+    <span class="badge {{object.severity|severity_bootstrap}} rounded-pill">Success</span>
+    <p>
+    Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
+    </p>
+    <ul>
+      <li>zuletzt bearbeitet von: {{object.updated_by}} am {{object.updated_at}}
+    </ul>
+{% endif %}
+</div>
+
 </div>
 </div>
 

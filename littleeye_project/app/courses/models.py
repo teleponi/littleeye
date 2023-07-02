@@ -5,10 +5,13 @@ User = get_user_model()
 
 
 class Course(models.Model):
-    name = models.CharField(max_length=100)
-    description = models.TextField(null=True, blank=True)
-    lecturer = models.ManyToManyField(
-        User, related_name="courses", limit_choices_to={"role": "TUTOR"}
+    name = models.CharField(max_length=200)
+    shortcut = models.CharField(max_length=20)
+    tutor = models.ForeignKey(
+        User,
+        related_name="courses",
+        on_delete=models.CASCADE,
+        limit_choices_to={"role": "TUTOR"},
     )
 
     def __str__(self):

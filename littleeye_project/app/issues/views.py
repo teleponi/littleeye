@@ -8,24 +8,25 @@ from django.contrib.auth.mixins import (
     UserPassesTestMixin,
 )
 from .models import Issue
-from .forms import IssueForm
+from .forms import StudentIssueForm
 
 
-class IssueDeleteView(DeleteView):
+class UserIsCourseTutor(UserPassesTestMixin):
+    def test_func(self):
+        return self.get_object().course.tutor == self.request.user
+
+
+class UserIsOwner(UserPassesTestMixin):
+    def test_func(self):
+        return self.get_object().author == self.request.user
+
+
+class IssueDeleteView(UserIsOwner, DeleteView):
     """
     issue/delete/3
     """
 
     model = Issue
-
-
-class IssueUpdateView(UpdateView):
-    """
-    issue/update/3
-    """
-
-    model = Issue
-    form_class = IssueForm
 
 
 class IssueCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -34,15 +35,26 @@ class IssueCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """
 
     model = Issue
-    form_class = IssueForm
+    form_class = StudentIssueForm
     success_message = "Event wurde erfolgreich eingtragen"
 
     def form_valid(self, form):
         form.instance.author = self.request.user
+        form.instance.status = 1
+        form.instance.severity = 1
+        form.instance.updated_by = self.request.user
         return super().form_valid(form)
 
 
-class IssueListView(ListView):
+class IssueDetailView(UserIsOwner, DetailView):
+    """
+    issue/slug-name
+    """
+
+    model = Issue
+
+
+class IssueListView(LoginRequiredMixin, ListView):
     """
     List all Tags by Name
     issues
@@ -50,10 +62,30 @@ class IssueListView(ListView):
 
     model = Issue
 
+    def get_queryset(self):
+        if self.request.user.role == "TUTOR":
+            return Issue.objects.tutor(self.request.user)
+        return Issue.objects.author(self.request.user)
 
-class IssueDetailView(DetailView):
+
+class IssueUpdateTutorView(UserIsCourseTutor, SuccessMessageMixin, UpdateView):
+    """
+    issue/update/3
+    """
+
+    model = Issue
+    form_class = StudentIssueForm
+    success_message = "Event wurde erfolgreich aktualisiert"
+
+    def form_valid(self, form):
+        form.instance.updated_by = self.request.user
+        return super().form_valid(form)
+
+
+class IssueDetailTutorView(UserIsCourseTutor, DetailView):
     """
     issue/slug-name
     """
 
     model = Issue
+    template_name = "issues/issue_detail_tutor.html"

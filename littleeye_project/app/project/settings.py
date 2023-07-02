@@ -1,4 +1,5 @@
 from pathlib import Path
+from django.contrib.messages import constants as messages
 import environ
 import os
 
@@ -18,24 +19,6 @@ DOCKER = env("DOCKER")
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 
-if DOCKER:
-    DATABASES = {
-        "default": {
-            "ENGINE": env("SQL_ENGINE", default="django.db.backends.sqlite3"),
-            "NAME": env("SQL_DATABASE", default=str(BASE_DIR / "db.sqlite3")),
-            "USER": env("SQL_USER", default="user"),
-            "PASSWORD": env("SQL_PASSWORD", default="password"),
-            "HOST": env("SQL_HOST", default="localhost"),
-            "PORT": env("SQL_PORT", default="5432"),
-        }
-    }
-else:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.sqlite3",
-            "NAME": BASE_DIR / "db.sqlite3",
-        }
-    }
 # Port angabe istwichtig
 CSRF_TRUSTED_ORIGINS = [
     "http://127.0.0.1",
@@ -56,6 +39,7 @@ INSTALLED_APPS = [
     "user",
     "issues",
     "courses",
+    "pages",
 ]
 
 CRISPY_TEMPLATE_PACK = "bootstrap5"
@@ -84,6 +68,26 @@ if DEBUG:
     MIDDLEWARE.extend(["debug_toolbar.middleware.DebugToolbarMiddleware"])
 
 ROOT_URLCONF = "project.urls"
+
+if DOCKER:
+    DATABASES = {
+        "default": {
+            "ENGINE": env("SQL_ENGINE", default="django.db.backends.sqlite3"),
+            "NAME": env("SQL_DATABASE", default=str(BASE_DIR / "db.sqlite3")),
+            "USER": env("SQL_USER", default="user"),
+            "PASSWORD": env("SQL_PASSWORD", default="password"),
+            "HOST": env("SQL_HOST", default="localhost"),
+            "PORT": env("SQL_PORT", default="5432"),
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
+
 
 TEMPLATES = [
     {
@@ -131,10 +135,6 @@ TIME_ZONE = "Europe/Berlin"
 USE_I18N = True  # Internationalisierung
 USE_TZ = True  # speichere Datumsangaben als UTC in der DB
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
 WHITENOISE_MANIFEST_STRICT = False  # sidecar not found in manifest 22.11.2022
 STATIC_URL = "static/"  # PFAD in der URL (urlpath)
 STATICFILES_DIRS = [BASE_DIR / "static"]  # Ort, wo Dateien liegen
@@ -173,8 +173,19 @@ LOGGING = {
         },
         "issues": {
             "handlers": ["console"],
-            "level": "WARNING",
+            "level": "DEBUG",
             "propagate": False,
         },
     },
+}
+
+if DEBUG:
+    MESSAGE_LEVEL = messages.DEBUG
+
+MESSAGE_TAGS = {
+    messages.DEBUG: "alert-secondary",
+    messages.INFO: "alert-info",
+    messages.SUCCESS: "alert-success",
+    messages.WARNING: "alert-warning",
+    messages.ERROR: "alert-danger",
 }
