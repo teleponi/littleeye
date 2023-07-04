@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
-from .models import Issue
+from .models import Issue, Comment
 
 User = get_user_model()
 
@@ -18,6 +18,28 @@ labels = {
 }
 
 
+class CommentForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.add_input(Submit("submit", "Formular absenden"))
+
+        self.helper.form_class = "form-horizontal"
+        self.helper.label_class = "col-lg-2"
+        self.helper.field_class = "col-lg-9"
+        self.helper.layout = Layout(
+            "name",
+            "description",
+        )
+
+    class Meta:
+        model = Comment
+        fields = "__all__"
+        exclude = ("author", "issue")
+
+
 class StudentIssueForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -28,7 +50,7 @@ class StudentIssueForm(forms.ModelForm):
 
         self.helper.form_class = "form-horizontal"
         self.helper.label_class = "col-lg-2"
-        self.helper.field_class = "col-lg-8"
+        self.helper.field_class = "col-lg-9"
         self.helper.layout = Layout(
             Fieldset(
                 "Pflichtinfos",
@@ -61,3 +83,38 @@ class StudentIssueForm(forms.ModelForm):
 
         widgets = {"tags": forms.CheckboxSelectMultiple()}
         labels = labels
+
+
+class TutorIssueForm(StudentIssueForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.helper = FormHelper()
+        self.helper.form_method = "post"
+        self.helper.add_input(Submit("submit", "Formular absenden"))
+
+        self.helper.form_class = "form-horizontal"
+        self.helper.label_class = "col-lg-2"
+        self.helper.field_class = "col-lg-9"
+        self.helper.layout = Layout(
+            "severity",
+            "status",
+            "is_active",
+            # "name",
+            # "media_type",
+            # "course",
+            # "tags",
+            # "location",
+        )
+
+    class Meta(StudentIssueForm.Meta):
+        exclude = (
+            "author",
+            "updated_by",
+            "name",
+            "media_type",
+            "course",
+            "tags",
+            "location",
+            "description",
+        )

@@ -114,3 +114,22 @@ class Issue(DateMixin):
 
     def get_absolute_url(self) -> str:
         return reverse("issues:issue_detail", kwargs={"pk": str(self.pk)})
+
+
+class Comment(DateMixin):
+    """Ein Kommentar zu einem Ticket.
+
+    related to :model:`issues.Issue` and :model:`user.User`.
+    """
+
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
+    name = models.CharField(
+        max_length=100,
+        validators=[
+            MinLengthValidator(
+                3, message="der Titel muss mindestens drei Zeichen lang sein!"
+            )
+        ],
+    )
+    description = models.TextField(validators=[])
+    issue = models.ForeignKey(Issue, on_delete=models.CASCADE, related_name="comments")

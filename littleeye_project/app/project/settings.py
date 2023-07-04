@@ -163,12 +163,12 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": "WARNING",
             "propagate": False,
         },
         "gunicorn": {
             "handlers": ["console"],
-            "level": "INFO",
+            "level": "WARNING",
             "propagate": False,
         },
         "issues": {

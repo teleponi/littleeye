@@ -8,7 +8,9 @@
   <meta name="author" content="{% block author %}{% endblock %}">
   <meta name="description" content="{% block description %}{% endblock %}">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+<!--<link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+-->
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
 <link href="{% static 'css/style.css' %}" rel="stylesheet" />
 </head>
@@ -27,12 +29,9 @@
 
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0" style="margin-left:0px;">
 
-          <li><a href="/" class="nav-link px-2
-                  text-white">Home</a></li>
-
 
           <li><a href="{% url "issues:issues" %}" class="nav-link px-2
-                  text-white">Issues</a></li>
+                  text-white">Ticket Übersicht</a></li>
 
         </ul>
 
@@ -46,7 +45,7 @@
 
           <div class="dropdown text-end">
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-            <img src="{% static 'images/penglogo.png' %}" alt="mdo" width="32" height="32" class="rounded-circle">
+        <img class="avatar avatar-16 bg-light rounded-circle text-white p-1" src="https://raw.githubusercontent.com/twbs/icons/main/icons/person.svg">
           </a>
           <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
               <li><a class="dropdown-item">Hi {{user}}</li>
@@ -59,9 +58,6 @@
           {% else %}
 
           <a href="{% url 'login' %}"><button type="button" class="btn btn-outline-light me-2">Login</button></a>
-          <a href="{% url 'user:signup' %}">
-          <button type="button" class="btn btn-warning">Sign-up</button>
-          </a>
 
          {% endif %}
         </div>

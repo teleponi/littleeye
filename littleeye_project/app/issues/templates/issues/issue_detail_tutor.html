@@ -12,19 +12,27 @@
 {% block content %}
 <div class="container">
 <div class="row">
-<div class="col-lg-8 col-sm-12">
+<div class="col-lg-9 col-sm-12">
 
 <h3>Beschreibung</h3>
 <p>Kurs: {{object.course}}</p>
 <p>Medium: {{object.media_type}}</p>
 <p>Ort: {{object.location}}</p>
 
-<p>{{object.description}}</p>
+<h2 class="mt-5">Ticket Beschreibung</h2>
+<p>{{object.description|linebreaks}}</p>
+
+<h2 class="mt-5">Kommentare</h2>
+<h4>Test comment</h4>
+<p>
+hLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+</p>
+{% include "./snippets/comments.html" %}
 </div>
 
-<div class="col-lg-4 col-sm-12">
+<div class="col-lg-3 col-sm-12">
 <p>
-Schweregrad: <span class="badge {{object.severity|severity_bootstrap}}
+Schweregrad: <span class="badge text-bg-{{object.severity|severity_bootstrap}}
                             rounded-pill">{{object.get_severity_display}}</span>
 </p>
 <p>
@@ -34,13 +42,14 @@ Medium: <b>{{object.media_type}}</b>
 Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
 </p>
 <ul>
+  <li>zugewiesen an: {{object.course.tutor}}</li>
   <li>zuletzt bearbeitet von: {{object.updated_by}} am {{object.updated_at}}</li>
   <li>aktueller Status: <b>{{object.get_status_display}}</b></li>
 </ul>
 
-{% if object.course.lecturer == user %}
-<a href="{% url 'issues:issue_update_tutor' %}">
-<button>Ticket bearbeiten</button>
+{% if object.course.tutor == request.user %}
+<a href="{% url 'issues:issue_update_tutor' object.pk %}">
+<button class="btn btn-primary">Ticket bearbeiten</button>
 </a>
 {% endif %}
 </div>

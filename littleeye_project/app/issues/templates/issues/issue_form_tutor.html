@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load pagestags %}
+
+{% block head %}
+{% if object %}
+<h1 class="display-6 fw-bold lh-1">{{object.name}}</h1>
+<p>
+am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
+</p>
+{% else %}
+<h1 class="display-6 fw-bold lh-1">Neues Ticket anlegen</h1>
+<p>
+{% endif %}
+
+
+{% endblock %}
+
+{% block content %}
+
+<div class="container">
+<div class="row">
+<div class="col-lg-9 col-sm-12">
+
+{% crispy form form.helper %}
+    {% comment %}
+    <form method="POST">
+      {% csrf_token %}
+    {{ form|crispy }}
+    <button>send</button>
+    </form>
+    {% endcomment %}
+
+
+<h2 class="mt-5">Ticket Beschreibung</h2>
+<p>{{object.description|linebreaks}}</p>
+
+<h2 class="mt-5">Kommentare</h2>
+<h4>Test comment</h4>
+<p>
+hLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
+</p>
+<p>
+<a href="{% url 'issues:comment_create' object.pk  %}">
+<button class="btn btn-primary">Kommentar hinzufügen</button>
+</a>
+</p>
+
+</div>
+<div class="col-lg-3 col-sm-12">
+{% if object %}
+    <span class="badge {{object.severity|severity_bootstrap}} rounded-pill">Success</span>
+  <p>Kursmodul: {{object.course}} ({{object.course.shortcut}})</p>
+    <p>Medium: {{object.media_type}}</p>
+    <p>Ort: {{object.location}}</p>
+    <p>Schlagworte: {{object.tags}}</p>
+
+    <p>
+    Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
+    </p>
+    <ul>
+      <li>zuletzt bearbeitet von: {{object.updated_by}} am {{object.updated_at}}
+    </ul>
+{% endif %}
+</div>
+
+</div>
+</div>
+
+{%endblock%}

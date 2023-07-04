@@ -3,17 +3,7 @@
 {% load pagestags %}
 
 {% block head %}
-{% if object %}
-<h1 class="display-6 fw-bold lh-1">{{object.name}}</h1>
-<p>
-am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
-</p>
-{% else %}
-<h1 class="display-6 fw-bold lh-1">Neues Ticket anlegen</h1>
-<p>
-{% endif %}
-
-
+<h1 class="display-6 fw-bold lh-1">Kommentar anlegen</h1>
 {% endblock %}
 
 {% block content %}

@@ -6,6 +6,11 @@ app_name = "issues"
 
 urlpatterns = [
     path(
+        "ochse/comment/<int:issue_id>",
+        views.CommentCreateView.as_view(),
+        name="comment_create",
+    ),
+    path(
         "create",
         views.IssueCreateView.as_view(),
         name="issue_create",

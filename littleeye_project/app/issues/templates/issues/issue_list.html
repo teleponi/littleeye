@@ -26,8 +26,8 @@
       <th scope="col">Fehler</th>
       <th scope="col">Author</th>
       <th scope="col">Status</th>
-      <th scope="col">Schwere</th>
-    </tr>
+      <!-- <th scope="col">Schwere</th> -->
+    </tr> 
   </thead>
   <tbody>
 {% for issue in object_list %}
@@ -41,9 +41,12 @@
       {% endif %}
       <td>{{issue.name}}</td>
       <td>{{issue.author}}</td>
-      <td>{{issue.status}}</td>
+      <td>{{issue.get_status_display}}</td>
+      <!--
       <td>
-      <span class="badge {{issue.severity|severity_bootstrap}} rounded-pill">{{object.get_severity_display}}</span></td>
+      <span class="badge text-bg-{{issue.get_severity_display|severity_bootstrap}}
+          rounded-pill">{{issue.get_severity_display}}</span></td>
+      -->
     </tr>
 {% endfor %}
   </tbody>

@@ -19,13 +19,12 @@
 <p>Medium: {{object.media_type}}</p>
 <p>Ort: {{object.location}}</p>
 
-<p>{{object.description}}</p>
+<p>{{object.description|linebreaks}}</p>
 </div>
 
 <div class="col-lg-4 col-sm-12">
 <p>
-Schweregrad: <span class="badge {{object.severity|severity_bootstrap}}
-                            rounded-pill">{{object.get_severity_display}}</span>
+Schweregrad: <span class="badge text-bg-{{object.severity|severity_bootstrap}} rounded-pill">{{object.get_severity_display}}</span>
 </p>
 <p>
 Medium: <b>{{object.media_type}}</b>
