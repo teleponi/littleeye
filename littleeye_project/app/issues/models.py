@@ -9,11 +9,6 @@ from .managers import EnhancedManager, IssueQuerySet
 User = get_user_model()
 
 
-# class CreatedByMixin(models.Model):
-# created_at = models.ForeignKey(User, on_delete=models.SET_NULL)
-# updated_by = models.ForeignKey(User, on_delete=models.SET_NULL)
-
-
 class DateMixin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -23,7 +18,7 @@ class DateMixin(models.Model):
 
 
 class Tag(models.Model):
-    icon = models.CharField(max_length=19)
+    icon = models.CharField(max_length=19, null=True, blank=True)
     name = models.CharField(
         max_length=99,
         unique=True,
@@ -47,7 +42,7 @@ class MediaType(models.Model):
         unique=True,
         validators=[MinLengthValidator(3), MaxLengthValidator(50)],
     )
-    icon = models.CharField(max_length=19)
+    icon = models.CharField(max_length=19, null=True, blank=True)
 
     def __str__(self):
         return self.name

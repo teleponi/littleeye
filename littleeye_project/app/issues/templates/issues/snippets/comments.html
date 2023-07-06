@@ -1,9 +1,9 @@
 {% for comment in object.comments.all %}
-<h5>{{comment.name}}</h5>
-<span class="small">von {{comment.author}} am {{comment.created_at}}</span>
-<p>
-  {{comment.description|linebreaks}}
-</p>
+    <h5>{{comment.name}}</h5>
+    <span class="small">von {{comment.author}} am {{comment.created_at}}</span>
+    <p>
+      {{comment.description|linebreaks}}
+    </p>
 {% endfor %}
 
 

@@ -23,10 +23,6 @@
 <p>{{object.description|linebreaks}}</p>
 
 <h2 class="mt-5">Kommentare</h2>
-<h4>Test comment</h4>
-<p>
-hLorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. 
-</p>
 {% include "./snippets/comments.html" %}
 </div>
 
@@ -39,7 +35,7 @@ Schweregrad: <span class="badge text-bg-{{object.severity|severity_bootstrap}}
 Medium: <b>{{object.media_type}}</b>
 </p>
 <p>
-Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
+Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von {{object.author}}
 </p>
 <ul>
   <li>zugewiesen an: {{object.course.tutor}}</li>

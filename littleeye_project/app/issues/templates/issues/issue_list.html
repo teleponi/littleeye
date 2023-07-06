@@ -33,10 +33,11 @@
 {% for issue in object_list %}
       <tr class="table-{{issue.get_severity_display|severity_bootstrap}}" >
       <th scope="row">{{issue.pk}}</th>
-      <td><a href="{% url 'issues:issue_detail' issue.pk %}">{{issue.course.shortcut}}</td>
       {% if user.role == "TUTOR" %}
+      <td><a href="{% url 'issues:issue_detail_tutor' issue.pk %}">{{issue.course.shortcut}}</td>
       <td><a href="{% url 'issues:issue_detail_tutor' issue.pk %}">{{issue.course.name}}</td>
       {% else %}
+      <td><a href="{% url 'issues:issue_detail' issue.pk %}">{{issue.course.shortcut}}</td>
       <td><a href="{% url 'issues:issue_detail' issue.pk %}">{{issue.course.name}}</td>
       {% endif %}
       <td>{{issue.name}}</td>

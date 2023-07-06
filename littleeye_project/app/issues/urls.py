@@ -6,7 +6,7 @@ app_name = "issues"
 
 urlpatterns = [
     path(
-        "ochse/comment/<int:issue_id>",
+        "issue/comment/<int:issue_id>",
         views.CommentCreateView.as_view(),
         name="comment_create",
     ),
