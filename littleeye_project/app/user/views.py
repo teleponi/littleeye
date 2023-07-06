@@ -41,7 +41,7 @@ class SignUpView(RedirectIfAuthenticatedMixin, generic.CreateView):
     form_class = SignUpForm
     success_url = reverse_lazy("login")
     template_name = "registration/signup.html"
-    redirect_to = "events:events"
+    redirect_to = "issues:issues"
 
     def form_valid(self, form):
         # response = super(SignUpView, self).form_valid(form)
