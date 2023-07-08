@@ -37,13 +37,15 @@ class CommentCreateView(CreateView):
         form.instance.issue = self.issue
         response = super().form_valid(form)
 
+        issue = Issue.objects.get(pk=self.issue.pk)
         history = IssueHistory(
-            type=1,
-            issue=form.instance.pk,
-            status=form.instance.status,
-            severity=form.instance.severity,
+            type=3,
+            issue=issue,
+            status=issue.status,
+            severity=issue.severity,
             updated_by=form.instance.author,
         )
+        print("History:", history)
         history.save()
         return response
 
@@ -76,7 +78,17 @@ class IssueCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         form.instance.status = 1
         form.instance.severity = 1
         form.instance.updated_by = self.request.user
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        history = IssueHistory(
+            type=1,
+            issue=form.instance,
+            status=form.instance.status,
+            severity=form.instance.severity,
+            updated_by=form.instance.author,
+        )
+        history.save()
+        return response
 
 
 class IssueDetailView(UserIsOwner, DetailView):

@@ -119,7 +119,7 @@ class IssueHistory(DateMixin):
         ISSUE_CLOSED = 4, "Ticket wurde geschlossen"
 
     type = models.IntegerField(choices=Type.choices)
-    issue = models.ManyToManyField(Issue, related_name="history")
+    issue = models.ForeignKey(Issue, on_delete=models.CASCADE, related_name="history")
     status = models.IntegerField(choices=Status.choices)
     severity = models.IntegerField(choices=Severity.choices)
     updated_by = models.ForeignKey(

@@ -1,5 +1,12 @@
 from django.contrib import admin
-from .models import Issue, MediaType, Tag
+from .models import Issue, MediaType, Tag, IssueHistory
+
+
+@admin.register(IssueHistory)
+class Historyadmin(admin.ModelAdmin):
+    search_fields = ["issue"]
+    list_display = ("issue", "type", "created_at")
+    list_filter = ("issue",)
 
 
 @admin.register(Tag)
