@@ -9,7 +9,7 @@ from django.contrib.auth.mixins import (
     PermissionRequiredMixin,
     UserPassesTestMixin,
 )
-from .models import Issue, Comment
+from .models import Issue, Comment, IssueHistory
 from .forms import StudentIssueForm, TutorIssueForm, CommentForm
 
 
@@ -35,7 +35,17 @@ class CommentCreateView(CreateView):
     def form_valid(self, form):
         form.instance.author = self.request.user
         form.instance.issue = self.issue
-        return super().form_valid(form)
+        response = super().form_valid(form)
+
+        history = IssueHistory(
+            type=1,
+            issue=form.instance.pk,
+            status=form.instance.status,
+            severity=form.instance.severity,
+            updated_by=form.instance.author,
+        )
+        history.save()
+        return response
 
     def get_initial(self):
         self.issue = get_object_or_404(Issue, pk=self.kwargs["issue_id"])

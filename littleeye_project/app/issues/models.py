@@ -9,6 +9,19 @@ from .managers import EnhancedManager, IssueQuerySet
 User = get_user_model()
 
 
+class Status(models.IntegerChoices):
+    IN_PROGRESS = 1, "in Bearbeitung"
+    CLOSED = 2, "geschlossen"
+    RE_OPENED = 3, "wiedergeöffnet"
+
+
+class Severity(models.IntegerChoices):
+    MINOR = 1, "unbedeutend"
+    NORMAL = 2, "normal"
+    URGENT = 3, "dringend"
+    LARGE = 4, "sofort"
+
+
 class DateMixin(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -48,29 +61,11 @@ class MediaType(models.Model):
         return self.name
 
 
-# class IssueHistory():
-# """Der Lebenszyklus eines Issues in der History-Tabelle."""
-
-# issue = models.ManyToManyField(Issue, related_name="issues")
-# status = models.IntegerField()
-
-
 class Issue(DateMixin):
     """Repräsentiert einen Issue.
 
     related to :model:`issues.MediaType` and :model:`user.User`.
     """
-
-    class Status(models.IntegerChoices):
-        IN_PROGRESS = 1, "in Bearbeitung"
-        CLOSED = 2, "geschlossen"
-        RE_OPENED = 3, "wiedergeöffnet"
-
-    class Severity(models.IntegerChoices):
-        MINOR = 1, "unbedeutend"
-        NORMAL = 2, "normal"
-        URGENT = 3, "dringend"
-        LARGE = 4, "sofort"
 
     updated_by = models.ForeignKey(
         User, on_delete=models.PROTECT, related_name="iusses"
@@ -109,6 +104,30 @@ class Issue(DateMixin):
 
     def get_absolute_url(self) -> str:
         return reverse("issues:issue_detail", kwargs={"pk": str(self.pk)})
+
+
+class IssueHistory(DateMixin):
+    """Der Lebenszyklus eines Issues in der History-Tabelle.
+
+    related to :model:`issues.Issue` and :model:`user.User`.
+    """
+
+    class Type(models.IntegerChoices):
+        ISSUE_CREATED = 1, "Ticket wurde erstellt"
+        STATUS_CHANGED = 2, "Status wurde geändert"
+        COMMENT_ADDED = 3, "Kommentar wurde hinzugefügt"
+        ISSUE_CLOSED = 4, "Ticket wurde geschlossen"
+
+    type = models.IntegerField(choices=Type.choices)
+    issue = models.ManyToManyField(Issue, related_name="history")
+    status = models.IntegerField(choices=Status.choices)
+    severity = models.IntegerField(choices=Severity.choices)
+    updated_by = models.ForeignKey(
+        User, on_delete=models.PROTECT, related_name="history"
+    )
+
+    def __str__(self):
+        return f"{self.issue}-{self.status}"
 
 
 class Comment(DateMixin):

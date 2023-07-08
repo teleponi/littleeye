@@ -5,3 +5,4 @@ staticfiles
 .env.prod
 .env.local
 .env.db
+db.sqlite3
