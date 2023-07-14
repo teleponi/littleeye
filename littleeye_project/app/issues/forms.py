@@ -1,6 +1,6 @@
 from crispy_forms.bootstrap import FormActions
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import HTML, Fieldset, Layout, Submit
+from crispy_forms.layout import HTML, Fieldset, Layout, Submit, Button
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
@@ -24,8 +24,15 @@ class CommentForm(forms.ModelForm):
 
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.add_input(Submit("submit", "Formular absenden"))
-
+        self.helper.add_input(Submit("submit", "Änderungen speichern"))
+        self.helper.add_input(
+            Button(
+                "input",
+                "Zurück zur Detailseite",
+                css_class="btn btn-secondary",
+                css_id="returnbutton",
+            )
+        )
         self.helper.form_class = "form-horizontal"
         self.helper.label_class = "col-lg-2"
         self.helper.field_class = "col-lg-9"
@@ -46,6 +53,7 @@ class StudentIssueForm(forms.ModelForm):
 
         self.helper = FormHelper()
         self.helper.form_method = "post"
+
         self.helper.add_input(Submit("submit", "Formular absenden"))
 
         self.helper.form_class = "form-horizontal"
@@ -91,7 +99,15 @@ class TutorIssueForm(StudentIssueForm):
 
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.add_input(Submit("submit", "Formular absenden"))
+        self.helper.add_input(Submit("submit", "Änderungen speichern"))
+        self.helper.add_input(
+            Button(
+                "input",
+                "Zurück zur Detailseite",
+                css_class="btn btn-secondary",
+                css_id="returnbutton",
+            )
+        )
 
         self.helper.form_class = "form-horizontal"
         self.helper.label_class = "col-lg-2"

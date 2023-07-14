@@ -32,5 +32,16 @@ Ticket:
 
 </div>
 </div>
+<script>
+window.onload = function(){
+  new DataTable('#example');
+
+    const btn = document.getElementById("returnbutton");
+    btn.addEventListener("click", (e) => {
+        window.location.href = "/issue/{{object.pk}}";
+    });
+};
+</script>
+
 
 {%endblock%}

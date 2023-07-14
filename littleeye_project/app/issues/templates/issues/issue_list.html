@@ -2,7 +2,7 @@
 {% load pagestags %}
 
 {% block head %}
-<h1 class="display-6 fw-bold lh-1">Issue Übersicht</h1>
+<h1 class="display-6 fw-bold lh-1">Übersichtsseite</h1>
 
 {% endblock %}
 
@@ -11,13 +11,15 @@
 <div class="row">
 <div class="col-lg-12 col-sm-12">
 
+{% if user.role == "STUDENT" %}
 <p>
 <a href="{% url 'issues:issue_create' %}">
-<button class="btn btn-primary">neues Issue anlegen</button>
+<button class="btn btn-primary">neues Ticket anlegen</button>
 </a>
 </p>
+{% endif %}
 
-<table class="table">
+<table class="table display" id="tickets" xdata-order='[[ 6, "desc" ]]'>
   <thead class="thead-light">
     <tr>
       <th scope="col">#</th>
@@ -26,7 +28,7 @@
       <th scope="col">Fehler</th>
       <th scope="col">Author</th>
       <th scope="col">Status</th>
-      <!-- <th scope="col">Schwere</th> -->
+      <th scope="col">Schwere</th>
     </tr> 
   </thead>
   <tbody>
@@ -43,22 +45,35 @@
       <td>{{issue.name}}</td>
       <td>{{issue.author}}</td>
       <td>{{issue.get_status_display}}</td>
-      <!--
       <td>
       <span class="badge text-bg-{{issue.get_severity_display|severity_bootstrap}}
           rounded-pill">{{issue.get_severity_display}}</span></td>
-      -->
     </tr>
 {% endfor %}
   </tbody>
 </table>
 
+<p>
+{% if not toggle_active %}
+<a href="/?inactive=true">zeige geschlossene Tickets</a>
+{% else %}
+<a href="/?inactive=false">nur aktive Tickets anzeigen</a>
+{% endif %}
+</p>
+
+{% comment %}
 {% include "../snippets/paginator.html" %}
-
-
-
+{% endcomment %}
 </div>
 </div>
 </div>
+<script>
+window.onload = function(){
+    new DataTable('#tickets', {
+      "order": [],
+    });
+};
+</script>
+
 
 {%endblock%}

@@ -46,7 +46,7 @@ def create_history(type_, issue, status, severity, updated_by):
     history.save()
 
 
-class CommentCreateView(CreateView):
+class CommentCreateView(SuccessMessageMixin, CreateView):
     """
     issue/3/comment
     """
@@ -77,6 +77,11 @@ class CommentCreateView(CreateView):
     def get_success_url(self):
         return reverse("issues:issue_detail_tutor", args=(self.object.issue.pk,))
 
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["object"] = self.issue
+        return ctx
+
 
 class IssueDeleteView(UserIsOwner, DeleteView):
     """
@@ -97,7 +102,7 @@ class IssueCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.status = 1
+        form.instance.status = 0
         form.instance.severity = 1
         form.instance.updated_by = self.request.user
         response = super().form_valid(form)
@@ -127,11 +132,19 @@ class IssueListView(LoginRequiredMixin, ListView):
     """
 
     model = Issue
+    queryset = Issue.objects.all()
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["toggle_active"] = self.request.GET.get("inactive") == "true"
+        return ctx
 
     def get_queryset(self):
+        show_closed = self.request.GET.get("inactive") == "true"
+        qs = super().get_queryset()
         if self.request.user.role == "TUTOR":
-            return Issue.objects.tutor(self.request.user)
-        return Issue.objects.author(self.request.user)
+            return qs.tutor(self.request.user).active(show_closed=show_closed)
+        return qs.author(self.request.user).active(show_closed=show_closed)
 
 
 class IssueUpdateTutorView(UserIsCourseTutor, SuccessMessageMixin, UpdateView):

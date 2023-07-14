@@ -10,16 +10,16 @@ User = get_user_model()
 
 
 class Status(models.IntegerChoices):
+    NEW = 0, "neu eingestellt"
     IN_PROGRESS = 1, "in Bearbeitung"
-    CLOSED = 2, "geschlossen"
-    RE_OPENED = 3, "wiedergeöffnet"
+    COMPLETED = 2, "erledigt"
+    CLOSED = 3, "geschlossen"
 
 
 class Severity(models.IntegerChoices):
-    MINOR = 1, "unbedeutend"
-    NORMAL = 2, "normal"
-    URGENT = 3, "dringend"
-    LARGE = 4, "sofort"
+    NORMAL = 1, "normal"
+    URGENT = 2, "dringend"
+    LARGE = 3, "sofort"
 
 
 class DateMixin(models.Model):
@@ -83,8 +83,8 @@ class Issue(DateMixin):
     )
     description = models.TextField(validators=[])
     course = models.ForeignKey(Course, on_delete=models.PROTECT, related_name="issues")
-    severity = models.IntegerField(choices=Severity.choices)
-    status = models.IntegerField(choices=Status.choices, default=1)
+    severity = models.IntegerField(choices=Severity.choices, default=1)
+    status = models.IntegerField(choices=Status.choices, default=0)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="issues")
     media_type = models.ForeignKey(
         MediaType, on_delete=models.PROTECT, related_name="issues"
@@ -93,7 +93,7 @@ class Issue(DateMixin):
     objects = EnhancedManager.from_queryset(IssueQuerySet)()
 
     class Meta:
-        ordering = ["name"]
+        ordering = ["-severity", "status"]
         constraints = [
             models.UniqueConstraint(fields=["author", "name"], name="unique_author"),
         ]

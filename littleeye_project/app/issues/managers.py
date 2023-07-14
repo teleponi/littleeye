@@ -11,16 +11,14 @@ class IssueQuerySet(models.QuerySet):
     def student(self) -> models.QuerySet:
         return self.filter(author__role="STUDENT")
 
-    def active(self) -> models.QuerySet:
-        """Filtert Queryset nach aktiven Objekten"""
-        return self.filter(is_active=True)
-
     def author(self, author) -> models.QuerySet:
         return self.filter(author=author)
 
-    def inactive(self) -> models.QuerySet:
+    def active(self, show_closed=False) -> models.QuerySet:
         """Filtert Queryset nach inaktiven Objekten"""
-        return self.filter(is_active=False)
+        if show_closed:
+            return self
+        return self.filter(status__in=[0, 1])
 
     def search(self, query=None) -> models.QuerySet:
         if not query:

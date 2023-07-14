@@ -6,16 +6,15 @@ register = template.Library()
 
 @register.filter
 def severity_bootstrap(value):
-    color = ""
     match value:
-        case "unbedeutend":
+        case "normal":
             color = "primary"
         case "sofort":
             color = "danger"
         case "dringend":
             color = "warning"
         case _:
-            color = "primary"
+            color = "light"
     return color
 
 

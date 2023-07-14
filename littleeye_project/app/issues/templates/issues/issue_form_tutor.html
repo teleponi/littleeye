@@ -35,9 +35,10 @@ am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
 <h2 class="mt-5">Ticket Beschreibung</h2>
 <p>{{object.description|linebreaks}}</p>
 
+{% comment %}
 <h2 class="mt-5">Kommentare</h2>
 {% include "./snippets/comments.html" %}
-
+{% endcomment %}
 <p>
 <a href="{% url 'issues:comment_create' object.pk  %}">
 <button class="btn btn-primary">Kommentar hinzufügen</button>
@@ -64,5 +65,13 @@ am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
 
 </div>
 </div>
+<script>
+window.onload = function(){
+    const btn = document.getElementById("returnbutton");
+    btn.addEventListener("click", (e) => {
+        window.location.href = "/issue/{{object.pk}}";
+    });
+};
+</script>
 
 {%endblock%}

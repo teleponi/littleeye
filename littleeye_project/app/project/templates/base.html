@@ -13,6 +13,7 @@
 -->
 <link href="{% static 'css/bootstrap.css' %}" rel="stylesheet" />
 <link href="{% static 'css/style.css' %}" rel="stylesheet" />
+<link href="https://cdn.datatables.net/v/bs5/dt-1.13.5/datatables.min.css" rel="stylesheet"/>
 </head>
 
 <body class="d-flex flex-column h-100">
@@ -34,11 +35,11 @@
                   text-white">Ticket Übersicht</a></li>
 
         </ul>
-
+      <!--
         <form action="" method="get" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
           <input name="q" required="required" type="search" class="form-control form-control-dark" placeholder="Search..." aria-label="Search">
         </form>
-
+      -->
         <div class="text-end">
 
           {% if user.is_authenticated %}
@@ -111,6 +112,7 @@
 </footer>
 
 </body>
-
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 <script src="{% static 'js/bootstrap.js' %}" crossorigin="anonymous" /></script>
+<script src="https://cdn.datatables.net/v/bs5/dt-1.13.5/datatables.min.js"></script>
 </html>
