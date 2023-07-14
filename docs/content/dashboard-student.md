@@ -1,8 +1,12 @@
 ---
 title: Dashboard Student 
 date: 20221223
-author: -
+author: - Bernd Fischer
 ---
 
-# Dashboard Student
+# Übersichtsseite Studenten 
+
+
+[![Überssichtseite Student](uebersichtsseite_student.png)]
+
 

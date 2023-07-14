@@ -37,6 +37,11 @@ Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.auth
   <li>aktueller Status: <b>{{object.get_status_display}}</b></li>
 </ul>
 
+<p>
+<a href="{% url 'issues:issue_history' object.pk %}">
+  History
+</a>
+</p>
 </div>
 
 

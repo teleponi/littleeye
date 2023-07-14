@@ -1,8 +1,10 @@
 ---
 title: Dashboard Tutor 
 date: 20221223
-author: -
+author: - Bernd Fischer
 ---
 
-# Dashboard Tutor
+# Übersichtsseite Tutor 
+
+[![Überssichtseite Tutor](uebersichtsseite_tutor.png)]
 

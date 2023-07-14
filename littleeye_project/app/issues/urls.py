@@ -11,6 +11,11 @@ urlpatterns = [
         name="comment_create",
     ),
     path(
+        "issue/history/<int:issue_id>",
+        views.IssueHistoryListView.as_view(),
+        name="issue_history",
+    ),
+    path(
         "create",
         views.IssueCreateView.as_view(),
         name="issue_create",

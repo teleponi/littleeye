@@ -24,7 +24,7 @@ class MediaTypeAdmin(admin.ModelAdmin):
 @admin.register(Issue)
 class IssueAdmin(admin.ModelAdmin):
     search_fields = ["name"]
-    list_display = "name", "course", "severity", "author", "course_tutor", "is_active"
+    list_display = "name", "course", "severity", "author", "course_tutor"
 
     def course_tutor(self, obj):
         return obj.course.tutor

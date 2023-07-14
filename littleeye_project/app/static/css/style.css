@@ -10,6 +10,10 @@ main>.container {
     margin-bottom: 15px;
 }
 
+.event_box li ul.history li{
+    margin-bottom: 0px !important;
+}
+
 .form-signin {
     width: 100%;
     max-width: 330px;

@@ -83,7 +83,6 @@ class Issue(DateMixin):
     )
     description = models.TextField(validators=[])
     course = models.ForeignKey(Course, on_delete=models.PROTECT, related_name="issues")
-    is_active = models.BooleanField(default=True)
     severity = models.IntegerField(choices=Severity.choices)
     status = models.IntegerField(choices=Status.choices, default=1)
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="issues")

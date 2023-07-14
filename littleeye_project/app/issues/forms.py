@@ -99,7 +99,7 @@ class TutorIssueForm(StudentIssueForm):
         self.helper.layout = Layout(
             "severity",
             "status",
-            "is_active",
+            # "is_active",
             # "name",
             # "media_type",
             # "course",

@@ -6,3 +6,8 @@ staticfiles
 .env.local
 .env.db
 db.sqlite3
+local_readme.md
+schema.txt
+schema.png
+issues.png
+little_eye.png

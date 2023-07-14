@@ -4,7 +4,6 @@ site_description: Wie bedient man das Programm?
 site_author: Bernd, Tom, Asiye 
 site_url: 
 nav:
-  - Introduction: index.md
   - Benutzerhandbuch:
       - Einleitung:
           - einleitung: content/einleitung.md
@@ -12,13 +11,13 @@ nav:
           - anmeldung: content/anmeldung.md
       - Studentensicht:
           - das Studenten-Dashboard: content/dashboard-student.md
-          - Funktionsübersicht: content/studenten-funktionen.md
+          - Ticket erstellen: content/ticket-erstellen.md
       - Tutorensicht:
           - das Tutoren-Dashboard: content/dashboard-tutor.md
-          - Funktionsübersicht: content/tutoren-funktionen.md
+          - Ticket bearbeiten: content/ticket-bearbeiten.md
+          - Ticket kommentieren: content/ticket-kommentieren.md
       - Allgemeines:
           - FAQ: content/faq.md
-          - Troubleshooting: content/troubleshooting.md
   - Contact: content/contact.md
 
 plugins:

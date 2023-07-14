@@ -1,4 +1,6 @@
+from typing import List
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import QuerySet
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
 from django.views.generic.detail import DetailView
@@ -9,7 +11,7 @@ from django.contrib.auth.mixins import (
     PermissionRequiredMixin,
     UserPassesTestMixin,
 )
-from .models import Issue, Comment, IssueHistory
+from .models import Issue, Comment, IssueHistory, Status, Severity
 from .forms import StudentIssueForm, TutorIssueForm, CommentForm
 
 
@@ -21,6 +23,27 @@ class UserIsCourseTutor(UserPassesTestMixin):
 class UserIsOwner(UserPassesTestMixin):
     def test_func(self):
         return self.get_object().author == self.request.user
+
+
+class IssueHistoryListView(ListView):
+    model = IssueHistory
+
+    def get_queryset(self) -> QuerySet:
+        self.issue = get_object_or_404(Issue, pk=self.kwargs["issue_id"])
+        queryset = IssueHistory.objects.filter(issue=self.issue)
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["issue"] = self.issue
+        return ctx
+
+
+def create_history(type_, issue, status, severity, updated_by):
+    history = IssueHistory(
+        type=type_, issue=issue, status=status, severity=severity, updated_by=updated_by
+    )
+    history.save()
 
 
 class CommentCreateView(CreateView):
@@ -38,15 +61,14 @@ class CommentCreateView(CreateView):
         response = super().form_valid(form)
 
         issue = Issue.objects.get(pk=self.issue.pk)
-        history = IssueHistory(
-            type=3,
+
+        create_history(
+            type_=IssueHistory.Type.COMMENT_ADDED,
             issue=issue,
             status=issue.status,
             severity=issue.severity,
             updated_by=form.instance.author,
         )
-        print("History:", history)
-        history.save()
         return response
 
     def get_initial(self):
@@ -80,14 +102,13 @@ class IssueCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         form.instance.updated_by = self.request.user
         response = super().form_valid(form)
 
-        history = IssueHistory(
-            type=1,
+        create_history(
+            type_=IssueHistory.Type.ISSUE_CREATED,
             issue=form.instance,
             status=form.instance.status,
             severity=form.instance.severity,
             updated_by=form.instance.author,
         )
-        history.save()
         return response
 
 
@@ -124,11 +145,16 @@ class IssueUpdateTutorView(UserIsCourseTutor, SuccessMessageMixin, UpdateView):
     template_name = "issues/issue_form_tutor.html"
 
     def form_valid(self, form):
-        print(f"FORM DATA has changed: {form.has_changed()}")
-        if form.has_changed():
-            # hier ein History Objekt schreiben
-            pass
         form.instance.updated_by = self.request.user
+        if form.has_changed():
+            print("The following fields changed: %s" % ", ".join(form.changed_data))
+            create_history(
+                type_=IssueHistory.Type.STATUS_CHANGED,
+                issue=form.instance,
+                status=form.instance.status,
+                severity=form.instance.severity,
+                updated_by=self.request.user,
+            )
         return super().form_valid(form)
 
     def get_success_url(self):

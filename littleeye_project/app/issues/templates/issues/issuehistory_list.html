@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load pagestags %}
+
+{% block head %}
+<h1 class="display-8 fw-bold lh-2">History des Tickets</h1>
+<h2 class="display-10 fw-bold lh-2">{{issue}}</h2>
+
+{% endblock %}
+
+{% block content %}
+<div class="container">
+<div class="row">
+<div class="col-lg-12 col-sm-12">
+
+<ul class="list-group event_box">
+{% for history in object_list %}
+<li class="list-group-item rounded">
+    {% comment %}
+      {{history.get_status_display}}
+      {{history.get_type_display}}
+    <span class="badge rounded-pill bg-primary">{{history}}</span>
+    {% endcomment %}
+    <small><span>{{history.created_at}} von {{history.updated_by}}</span></small><br>
+<b>{{history.get_type_display}}</b>
+<ul class="history">
+    {% if history.type == 2 %}
+      <li>neuer Ticket-Status: {{history.get_status_display}}</li>
+      <li>neuer Ticket-Schweregrad: {{history.get_severity_display}}</li>
+    {% else %}
+      <li>Ticket-Status {{history.get_status_display}}</li>
+      <li>Ticket-Schweregrad {{history.get_severity_display}}</li>
+
+      {% if history.type == 3 %}
+      <a href="">Link zum Kommentar</a>
+      {% endif %}
+    {% endif %}
+</ul>
+</li>
+{% endfor%}
+</ul>
+
+
+
+
+</div>
+</div>
+</div>
+
+{%endblock%}
