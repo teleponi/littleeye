@@ -87,7 +87,7 @@ class StudentIssueForm(forms.ModelForm):
     class Meta:
         model = Issue
         fields = "__all__"
-        exclude = ("author", "updated_by", "status", "severity", "is_active")
+        exclude = ("author", "updated_by", "status", "severity")
 
         widgets = {"tags": forms.CheckboxSelectMultiple()}
         labels = labels
