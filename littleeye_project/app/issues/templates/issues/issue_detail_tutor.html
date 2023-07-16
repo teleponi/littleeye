@@ -49,7 +49,11 @@ Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von {{object.autho
 </a>
 {% endif %}
 </div>
-
+<p>
+<a href="{% url 'issues:issue_history' object.pk %}">
+  History
+</a>
+</p>
 
 </div>
 </div>
