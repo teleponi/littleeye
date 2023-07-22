@@ -4,6 +4,7 @@ services:
       context: ./app
       dockerfile: Dockerfile.prod
     command: gunicorn --bind 0.0.0.0:8000 project.asgi -w 4 -k uvicorn.workers.UvicornWorker
+    restart: always
     volumes:
       - static_volume_little:/home/app/web/staticfiles
     expose:
@@ -14,6 +15,7 @@ services:
       - dbi
   dbi:
     image: postgres:14.0-alpine
+    restart: always
     volumes:
       - postgres_data_little:/var/lib/postgresql/data/
     env_file:
