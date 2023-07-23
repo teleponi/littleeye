@@ -72,7 +72,7 @@ class Issue(DateMixin):
     )
     name = models.CharField(
         max_length=100,
-        validators=[MinLengthValidator(3, message="Custom")],
+        validators=[MinLengthValidator(3)],
     )
     location = models.CharField(
         max_length=100,

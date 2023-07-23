@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
-from .models import Issue, Comment
+from .models import Issue, Comment, Status
 
 User = get_user_model()
 
@@ -21,24 +21,26 @@ labels = {
 class CommentForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.add_input(Submit("submit", "Änderungen speichern"))
-        self.helper.add_input(
-            Button(
-                "input",
-                "Zurück zur Detailseite",
-                css_class="btn btn-secondary",
-                css_id="returnbutton",
-            )
-        )
         self.helper.form_class = "form-horizontal"
         self.helper.label_class = "col-lg-2"
         self.helper.field_class = "col-lg-9"
         self.helper.layout = Layout(
             "name",
             "description",
+            HTML(
+                """
+                <div class='mb-3 row'>
+                <div class='col-lg-2'></div>
+                <div class='col-lg-9'>
+                <button class='btn btn-green float-end'
+                style='margin-left:10px'>Kommentar hinzufügen</button>
+                <button id="returnbutton" type="button" class='btn btn-secondary float-end '>Zurück zur
+                Detailseite</button>
+                </div>
+                """
+            ),
         )
 
     class Meta:
@@ -50,12 +52,8 @@ class CommentForm(forms.ModelForm):
 class StudentIssueForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         self.helper = FormHelper()
         self.helper.form_method = "post"
-
-        self.helper.add_input(Submit("submit", "Formular absenden"))
-
         self.helper.form_class = "form-horizontal"
         self.helper.label_class = "col-lg-2"
         self.helper.field_class = "col-lg-9"
@@ -82,6 +80,18 @@ class StudentIssueForm(forms.ModelForm):
                 ),
                 "description",
             ),
+            HTML(
+                """
+                <div class='mb-3 row'>
+                <div class='col-lg-2'></div>
+                <div class='col-lg-9'>
+                <button class='btn btn-green float-end' style='margin-left:10px'>Ticket absenden</button>
+                <a href="/">
+                <button type="button" class='btn btn-secondary float-end '>Zurück zur
+                Übersicht</button></a>
+                </div>
+                """
+            ),
         )
 
     class Meta:
@@ -99,15 +109,8 @@ class TutorIssueForm(StudentIssueForm):
 
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.add_input(Submit("submit", "Änderungen speichern"))
-        self.helper.add_input(
-            Button(
-                "input",
-                "Zurück zur Detailseite",
-                css_class="btn btn-secondary",
-                css_id="returnbutton",
-            )
-        )
+        limited_choices = [s for s in Status.choices if s[0] not in [0, 3]]
+        self.fields["status"] = forms.ChoiceField(choices=limited_choices)
 
         self.helper.form_class = "form-horizontal"
         self.helper.label_class = "col-lg-2"
@@ -115,12 +118,18 @@ class TutorIssueForm(StudentIssueForm):
         self.helper.layout = Layout(
             "severity",
             "status",
-            # "is_active",
-            # "name",
-            # "media_type",
-            # "course",
-            # "tags",
-            # "location",
+            HTML(
+                """
+                <div class='mb-3 row'>
+                <div class='col-lg-2'></div>
+                <div class='col-lg-9'>
+                <button class='btn btn-green float-end'
+                style='margin-left:10px'>Speichern</button>
+                <button id='returnbutton' type="button" class='btn btn-secondary float-end '>Zurück zur
+                Detailseite</button>
+                </div>
+                """
+            ),
         )
 
     class Meta(StudentIssueForm.Meta):

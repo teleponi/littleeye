@@ -39,9 +39,10 @@ am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
 <h2 class="mt-5">Kommentare</h2>
 {% include "./snippets/comments.html" %}
 {% endcomment %}
+
 <p>
 <a href="{% url 'issues:comment_create' object.pk  %}">
-<button class="btn btn-primary">Kommentar hinzufügen</button>
+<button type="button" class="btn btn-green">Kommentar hinzufügen</button>
 </a>
 </p>
 

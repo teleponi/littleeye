@@ -161,6 +161,13 @@ class IssueUpdateTutorView(UserIsCourseTutor, SuccessMessageMixin, UpdateView):
         form.instance.updated_by = self.request.user
         if form.has_changed():
             print("The following fields changed: %s" % ", ".join(form.changed_data))
+
+            # for the sake of the prototype
+            # set ticket to CLOSED, if is set to COMPLETED
+            print(form.instance.status, Status.COMPLETED)
+            if form.instance.status == Status.COMPLETED:
+                form.instance.status = Status.CLOSED
+
             create_history(
                 type_=IssueHistory.Type.STATUS_CHANGED,
                 issue=form.instance,

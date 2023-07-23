@@ -1,3 +1,20 @@
+.bg_green {
+    background-color: #31c48d;
+}
+
+.btn-green {
+    background-color: #31c48d;
+    border-color: #31c48d;
+
+}
+
+.btn-green:hover {
+    border-color: #31c48d;
+    background-color: #31c48d;
+    opacity:0.7;
+    color:white;
+}
+
 main>.container {
     padding: 20px 25px 0;
 }

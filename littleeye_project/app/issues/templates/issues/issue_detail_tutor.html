@@ -45,15 +45,17 @@ Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von {{object.autho
 
 {% if object.course.tutor == request.user %}
 <a href="{% url 'issues:issue_update_tutor' object.pk %}">
-<button class="btn btn-primary">Ticket bearbeiten</button>
+<button class="btn btn-green">Ticket bearbeiten</button>
 </a>
-{% endif %}
-</div>
-<p>
+
+<p style="margin-top:25px">
 <a href="{% url 'issues:issue_history' object.pk %}">
-  History
+  Ticket-History
 </a>
 </p>
+
+{% endif %}
+</div>
 
 </div>
 </div>
