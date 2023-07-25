@@ -95,7 +95,9 @@ class Issue(DateMixin):
     class Meta:
         ordering = ["-severity", "status"]
         constraints = [
-            models.UniqueConstraint(fields=["author", "name"], name="unique_author"),
+            models.UniqueConstraint(
+                fields=["author", "name", "created_at"], name="unique_author"
+            ),
         ]
 
     def __str__(self) -> str:
