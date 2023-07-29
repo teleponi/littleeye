@@ -1,12 +1,12 @@
 from django.contrib import admin
-from .models import Issue, MediaType, Tag, IssueHistory
+from .models import Ticket, MediaType, Tag, TicketHistory
 
 
-@admin.register(IssueHistory)
+@admin.register(TicketHistory)
 class Historyadmin(admin.ModelAdmin):
-    search_fields = ["issue"]
-    list_display = ("issue", "type", "created_at")
-    list_filter = ("issue",)
+    search_fields = ["ticket"]
+    list_display = ("ticket", "type", "created_at")
+    list_filter = ("ticket",)
 
 
 @admin.register(Tag)
@@ -21,8 +21,8 @@ class MediaTypeAdmin(admin.ModelAdmin):
     list_display = ("name",)
 
 
-@admin.register(Issue)
-class IssueAdmin(admin.ModelAdmin):
+@admin.register(Ticket)
+class TicketAdmin(admin.ModelAdmin):
     search_fields = ["name"]
     list_display = "name", "course", "severity", "author", "course_tutor"
 

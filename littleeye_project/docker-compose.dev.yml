@@ -3,9 +3,10 @@ services:
     build:
       context: ./app
       dockerfile: Dockerfile.prod
-    command: gunicorn --bind 0.0.0.0:8000 project.asgi -w 4 -k uvicorn.workers.UvicornWorker
+    command: gunicorn --bind 0.0.0.0:8000 --reload project.asgi --access-logfile '-' --error-logfile '-' -w 4 -k uvicorn.workers.UvicornWorker
     volumes:
       - static_volume:/home/app/web/staticfiles
+      - .:/app
     expose:
       - 8000
     env_file:

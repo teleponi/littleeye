@@ -1,19 +1,13 @@
-{% extends './base.html' %}
+{% extends 'base.html' %}
 
 {% block head%}
-PAGE NOT FOUND!
+<h1>Ungültige Anfrage</h1>
 {% endblock %}
 
 {% block content %}
-<h1>Seite nicht gefunden</h1>
-Sorry, die Seite konnte nicht gefunden werden.
+<p>
+Diese Seite existiert leider nicht mehr!
+</p>
 
-<h2>Was du jetzt tun kannst:</h2>
-<ul>
-    <li><a href="{% url 'events:events' %}">Zur Übersicht aller Events</a></li>
-    <li><a href="/">Zur Homepage</a></li>
-    <li><a href="{% url 'pages:contact' %}">Zum Kontaktformular</a></li>
-</ul>
-
-{{data}}
 {% endblock %}
+

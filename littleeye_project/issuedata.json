@@ -1,0 +1,19 @@
+[
+    {
+        "model": "issues.tag",
+        "pk": 1,
+        "fields": {
+            "icon": null,
+            "name": "Fehler",
+            "slug": "fehler"
+        }
+    },
+    {
+        "model": "issues.mediatype",
+        "pk": 1,
+        "fields": {
+            "name": "Skript",
+            "icon": null
+        }
+    }
+]

@@ -70,7 +70,7 @@ am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
 window.onload = function(){
     const btn = document.getElementById("returnbutton");
     btn.addEventListener("click", (e) => {
-        window.location.href = "/issue/{{object.pk}}";
+        window.location.href = "/ticket/{{object.pk}}";
     });
 };
 </script>

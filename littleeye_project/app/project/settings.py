@@ -47,7 +47,7 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
 # hier unser eigenes User-Model registrieren
 AUTH_USER_MODEL = "user.User"
-LOGIN_URL = "/accounts/login"
+# LOGIN_URL = "/accounts/login" # error?
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
@@ -135,11 +135,17 @@ TIME_ZONE = "Europe/Berlin"
 USE_I18N = True  # Internationalisierung
 USE_TZ = True  # speichere Datumsangaben als UTC in der DB
 
-WHITENOISE_MANIFEST_STRICT = False  # sidecar not found in manifest 22.11.2022
+# WHITENOISE_MANIFEST_STRICT = False  # sidecar not found in manifest 22.11.2022
 STATIC_URL = "static/"  # PFAD in der URL (urlpath)
 STATICFILES_DIRS = [BASE_DIR / "static"]  # Ort, wo Dateien liegen
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+STORAGES = {
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -163,18 +169,15 @@ LOGGING = {
     "loggers": {
         "django": {
             "handlers": ["console"],
-            "level": "WARNING",
-            "propagate": False,
+            "level": "DEBUG",
         },
         "gunicorn": {
             "handlers": ["console"],
-            "level": "WARNING",
-            "propagate": False,
+            "level": "DEBUG",
         },
         "issues": {
             "handlers": ["console"],
             "level": "DEBUG",
-            "propagate": False,
         },
     },
 }

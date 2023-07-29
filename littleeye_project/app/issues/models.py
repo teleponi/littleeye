@@ -61,15 +61,12 @@ class MediaType(models.Model):
         return self.name
 
 
-class Issue(DateMixin):
+class Ticket(DateMixin):
     """Repräsentiert einen Issue.
 
     related to :model:`issues.MediaType` and :model:`user.User`.
     """
 
-    updated_by = models.ForeignKey(
-        User, on_delete=models.PROTECT, related_name="iusses"
-    )
     name = models.CharField(
         max_length=100,
         validators=[MinLengthValidator(3)],
@@ -82,14 +79,14 @@ class Issue(DateMixin):
         help_text="Wo ist der Fehler aufgetreten? Zeile, Minute, Seite, ect.",
     )
     description = models.TextField(validators=[])
-    course = models.ForeignKey(Course, on_delete=models.PROTECT, related_name="issues")
+    course = models.ForeignKey(Course, on_delete=models.PROTECT, related_name="tickets")
     severity = models.IntegerField(choices=Severity.choices, default=1)
     status = models.IntegerField(choices=Status.choices, default=0)
-    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="issues")
+    author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tickets")
     media_type = models.ForeignKey(
-        MediaType, on_delete=models.PROTECT, related_name="issues"
+        MediaType, on_delete=models.PROTECT, related_name="tickets"
     )
-    tags = models.ManyToManyField(Tag, related_name="issues", blank=True)
+    tags = models.ManyToManyField(Tag, related_name="tickets", blank=True)
     objects = EnhancedManager.from_queryset(IssueQuerySet)()
 
     class Meta:
@@ -107,20 +104,20 @@ class Issue(DateMixin):
         return reverse("issues:issue_detail", kwargs={"pk": str(self.pk)})
 
 
-class IssueHistory(DateMixin):
+class TicketHistory(DateMixin):
     """Der Lebenszyklus eines Issues in der History-Tabelle.
 
     related to :model:`issues.Issue` and :model:`user.User`.
     """
 
     class Type(models.IntegerChoices):
-        ISSUE_CREATED = 1, "Ticket wurde erstellt"
+        TICKET_CREATED = 1, "Ticket wurde erstellt"
         STATUS_CHANGED = 2, "Status wurde geändert"
         COMMENT_ADDED = 3, "Kommentar wurde hinzugefügt"
-        ISSUE_CLOSED = 4, "Ticket wurde geschlossen"
+        TICKET_CLOSED = 4, "Ticket wurde geschlossen"
 
     type = models.IntegerField(choices=Type.choices)
-    issue = models.ForeignKey(Issue, on_delete=models.CASCADE, related_name="history")
+    ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name="history")
     status = models.IntegerField(choices=Status.choices)
     severity = models.IntegerField(choices=Severity.choices)
     updated_by = models.ForeignKey(
@@ -147,4 +144,6 @@ class Comment(DateMixin):
         ],
     )
     description = models.TextField(validators=[])
-    issue = models.ForeignKey(Issue, on_delete=models.CASCADE, related_name="comments")
+    ticket = models.ForeignKey(
+        Ticket, on_delete=models.CASCADE, related_name="comments"
+    )

@@ -5,7 +5,7 @@ from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 
-from .models import Issue, Comment, Status
+from .models import Ticket, Comment, Status
 
 User = get_user_model()
 
@@ -46,10 +46,10 @@ class CommentForm(forms.ModelForm):
     class Meta:
         model = Comment
         fields = "__all__"
-        exclude = ("author", "issue")
+        exclude = ("author", "ticket")
 
 
-class StudentIssueForm(forms.ModelForm):
+class StudentTicketForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
@@ -95,7 +95,7 @@ class StudentIssueForm(forms.ModelForm):
         )
 
     class Meta:
-        model = Issue
+        model = Ticket
         fields = "__all__"
         exclude = ("author", "updated_by", "status", "severity")
 
@@ -103,7 +103,7 @@ class StudentIssueForm(forms.ModelForm):
         labels = labels
 
 
-class TutorIssueForm(StudentIssueForm):
+class TutorTicketForm(StudentTicketForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -132,7 +132,7 @@ class TutorIssueForm(StudentIssueForm):
             ),
         )
 
-    class Meta(StudentIssueForm.Meta):
+    class Meta(StudentTicketForm.Meta):
         exclude = (
             "author",
             "updated_by",

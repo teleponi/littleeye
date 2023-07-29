@@ -8,10 +8,10 @@ from django.conf import settings
 
 urlpatterns = [
     # http://127.0.0.1:8000/events/hello
+    path("", include("issues.urls")),
     path("accounts/", include("user.urls")),
     path("accounts/", include("django.contrib.auth.urls")),
     path("admin/", admin.site.urls),
-    path("", include("issues.urls")),
     # path("", RedirectView.as_view(url="events/categories")),
 ]
 

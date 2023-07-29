@@ -11,8 +11,8 @@ from django.contrib.auth.mixins import (
     PermissionRequiredMixin,
     UserPassesTestMixin,
 )
-from .models import Issue, Comment, IssueHistory, Status, Severity
-from .forms import StudentIssueForm, TutorIssueForm, CommentForm
+from .models import Ticket, Comment, TicketHistory, Status, Severity
+from .forms import StudentTicketForm, TutorTicketForm, CommentForm
 
 
 class UserIsCourseTutor(UserPassesTestMixin):
@@ -26,11 +26,11 @@ class UserIsOwner(UserPassesTestMixin):
 
 
 class IssueHistoryListView(ListView):
-    model = IssueHistory
+    model = TicketHistory
 
     def get_queryset(self) -> QuerySet:
-        self.issue = get_object_or_404(Issue, pk=self.kwargs["issue_id"])
-        queryset = IssueHistory.objects.filter(issue=self.issue)
+        self.issue = get_object_or_404(Ticket, pk=self.kwargs["issue_id"])
+        queryset = TicketHistory.objects.filter(ticket=self.issue)
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -40,8 +40,12 @@ class IssueHistoryListView(ListView):
 
 
 def create_history(type_, issue, status, severity, updated_by):
-    history = IssueHistory(
-        type=type_, issue=issue, status=status, severity=severity, updated_by=updated_by
+    history = TicketHistory(
+        type=type_,
+        ticket=issue,
+        status=status,
+        severity=severity,
+        updated_by=updated_by,
     )
     history.save()
 
@@ -57,29 +61,29 @@ class CommentCreateView(SuccessMessageMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.author = self.request.user
-        form.instance.issue = self.issue
+        form.instance.ticket = self.ticket
         response = super().form_valid(form)
 
-        issue = Issue.objects.get(pk=self.issue.pk)
+        ticket = Ticket.objects.get(pk=self.ticket.pk)
 
         create_history(
-            type_=IssueHistory.Type.COMMENT_ADDED,
-            issue=issue,
-            status=issue.status,
-            severity=issue.severity,
+            type_=TicketHistory.Type.COMMENT_ADDED,
+            issue=ticket,
+            status=ticket.status,
+            severity=ticket.severity,
             updated_by=form.instance.author,
         )
         return response
 
     def get_initial(self):
-        self.issue = get_object_or_404(Issue, pk=self.kwargs["issue_id"])
+        self.ticket = get_object_or_404(Ticket, pk=self.kwargs["issue_id"])
 
     def get_success_url(self):
-        return reverse("issues:issue_detail_tutor", args=(self.object.issue.pk,))
+        return reverse("issues:issue_detail_tutor", args=(self.object.ticket.pk,))
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx["object"] = self.issue
+        ctx["object"] = self.ticket
         return ctx
 
 
@@ -88,7 +92,7 @@ class IssueDeleteView(UserIsOwner, DeleteView):
     issue/delete/3
     """
 
-    model = Issue
+    model = Ticket
 
 
 class IssueCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -96,8 +100,8 @@ class IssueCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     /issue/create
     """
 
-    model = Issue
-    form_class = StudentIssueForm
+    model = Ticket
+    form_class = StudentTicketForm
     success_message = "Ticket wurde erfolgreich gemeldet"
 
     def form_valid(self, form):
@@ -108,7 +112,7 @@ class IssueCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
         response = super().form_valid(form)
 
         create_history(
-            type_=IssueHistory.Type.ISSUE_CREATED,
+            type_=TicketHistory.Type.TICKET_CREATED,
             issue=form.instance,
             status=form.instance.status,
             severity=form.instance.severity,
@@ -122,7 +126,10 @@ class IssueDetailView(UserIsOwner, DetailView):
     issue/slug-name
     """
 
-    model = Issue
+    model = Ticket
+
+    def get_initial(self):
+        print("i am in initially detail view")
 
 
 class IssueListView(LoginRequiredMixin, ListView):
@@ -131,8 +138,8 @@ class IssueListView(LoginRequiredMixin, ListView):
     issues
     """
 
-    model = Issue
-    queryset = Issue.objects.all()
+    model = Ticket
+    queryset = Ticket.objects.all()
 
     def get_context_data(self, **kwargs):
         ctx = super().get_context_data(**kwargs)
@@ -152,10 +159,10 @@ class IssueUpdateTutorView(UserIsCourseTutor, SuccessMessageMixin, UpdateView):
     issue/update/3
     """
 
-    model = Issue
-    form_class = TutorIssueForm
+    model = Ticket
+    form_class = TutorTicketForm
     success_message = "Ticket wurde erfolgreich aktualisiert"
-    template_name = "issues/issue_form_tutor.html"
+    template_name = "issues/ticket_form_tutor.html"
 
     def form_valid(self, form):
         form.instance.updated_by = self.request.user
@@ -169,7 +176,7 @@ class IssueUpdateTutorView(UserIsCourseTutor, SuccessMessageMixin, UpdateView):
                 form.instance.status = Status.CLOSED
 
             create_history(
-                type_=IssueHistory.Type.STATUS_CHANGED,
+                type_=TicketHistory.Type.STATUS_CHANGED,
                 issue=form.instance,
                 status=form.instance.status,
                 severity=form.instance.severity,
@@ -186,5 +193,5 @@ class IssueDetailTutorView(UserIsCourseTutor, DetailView):
     issue/slug-name
     """
 
-    model = Issue
-    template_name = "issues/issue_detail_tutor.html"
+    model = Ticket
+    template_name = "issues/ticket_detail_tutor.html"

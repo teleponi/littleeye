@@ -7,15 +7,9 @@ from django.contrib.auth.hashers import make_password
 
 
 class UserFactory(factory.django.DjangoModelFactory):
-    """
-    factory boy stellt mit  DjangoModelFactory eine Möglichkeit zur 
-    Verfügung, eine Django-Model Instanz zu erstellen
-    """
     class Meta:
         model = get_user_model()
 
     username = factory.Faker("user_name")
     email = factory.Faker("email")
-    password = factory.LazyFunction(
-        lambda: make_password("abc")
-    )
+    password = factory.LazyFunction(lambda: make_password("abc"))
