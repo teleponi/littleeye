@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import (
     PermissionRequiredMixin,
     UserPassesTestMixin,
 )
+from user.models import Role
 from .models import Ticket, Comment, TicketHistory, Status, Severity
 from .forms import StudentTicketForm, TutorTicketForm, CommentForm
 
@@ -23,6 +24,19 @@ class UserIsCourseTutor(UserPassesTestMixin):
 class UserIsOwner(UserPassesTestMixin):
     def test_func(self):
         return self.get_object().author == self.request.user
+
+
+class IsAdminUser(UserPassesTestMixin):
+    def test_func(self):
+        return self.request.user.is_superuser
+
+
+class IsStudent(UserPassesTestMixin):
+    def test_func(self):
+        try:
+            return self.request.user.role == Role.STUDENT
+        except AttributeError:
+            return False
 
 
 class IssueHistoryListView(ListView):
@@ -87,7 +101,7 @@ class CommentCreateView(SuccessMessageMixin, CreateView):
         return ctx
 
 
-class IssueDeleteView(UserIsOwner, DeleteView):
+class IssueDeleteView(IsAdminUser, DeleteView):
     """
     issue/delete/3
     """
@@ -95,7 +109,7 @@ class IssueDeleteView(UserIsOwner, DeleteView):
     model = Ticket
 
 
-class IssueCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
+class IssueCreateView(IsStudent, SuccessMessageMixin, CreateView):
     """
     /issue/create
     """
@@ -167,8 +181,6 @@ class IssueUpdateTutorView(UserIsCourseTutor, SuccessMessageMixin, UpdateView):
     def form_valid(self, form):
         form.instance.updated_by = self.request.user
         if form.has_changed():
-            print("The following fields changed: %s" % ", ".join(form.changed_data))
-
             # for the sake of the prototype
             # set ticket to CLOSED, if is set to COMPLETED
             print(form.instance.status, Status.COMPLETED)
