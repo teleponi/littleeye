@@ -31,17 +31,10 @@ class DateMixin(models.Model):
 
 
 class Tag(models.Model):
-    icon = models.CharField(max_length=19, null=True, blank=True)
     name = models.CharField(
         max_length=99,
         unique=True,
     )
-    slug = models.SlugField(unique=True)
-
-    def save(self, *args, **kwargs):
-        if not self.slug:
-            self.slug = slugify(self.name)
-        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name
@@ -55,7 +48,6 @@ class MediaType(models.Model):
         unique=True,
         validators=[MinLengthValidator(3), MaxLengthValidator(50)],
     )
-    icon = models.CharField(max_length=19, null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -118,6 +110,13 @@ class TicketHistory(DateMixin):
 
     type = models.IntegerField(choices=Type.choices)
     ticket = models.ForeignKey(Ticket, on_delete=models.CASCADE, related_name="history")
+    comment = models.ForeignKey(
+        "Comment",
+        on_delete=models.SET_NULL,
+        blank=True,
+        null=True,
+        related_name="history",
+    )
     status = models.IntegerField(choices=Status.choices)
     severity = models.IntegerField(choices=Severity.choices)
     updated_by = models.ForeignKey(
@@ -125,13 +124,13 @@ class TicketHistory(DateMixin):
     )
 
     def __str__(self):
-        return f"{self.issue}-{self.status}"
+        return f"{self.ticket}-{self.status}"
 
 
 class Comment(DateMixin):
     """Ein Kommentar zu einem Ticket.
 
-    related to :model:`issues.Issue` and :model:`user.User`.
+    related to :model:`issues.Issue`, :model:`user.User`.
     """
 
     author = models.ForeignKey(User, on_delete=models.CASCADE, related_name="comments")
@@ -147,3 +146,6 @@ class Comment(DateMixin):
     ticket = models.ForeignKey(
         Ticket, on_delete=models.CASCADE, related_name="comments"
     )
+
+    def __str__(self) -> str:
+        return self.name

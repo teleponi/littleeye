@@ -3,12 +3,14 @@
 
 {% block head %}
 <h1 class="display-8 fw-bold lh-2">History des Tickets</h1>
-<h2 class="display-10 fw-bold lh-2">{{ticket}}</h2>
-
+<h3 class="display-10 fw-bold lh-2">{{ticket}}</h3>
+<a href="{% url 'issues:issue_detail_tutor' ticket.pk %}">
+zurück zum Ticket 
+</a>
 {% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container mb-5">
 <div class="row">
 <div class="col-lg-12 col-sm-12">
 
@@ -31,7 +33,12 @@
       <li>Ticket-Schweregrad {{history.get_severity_display}}</li>
 
       {% if history.type == 3 %}
-      <a href="">Link zum Kommentar</a>
+      <a 
+         href="#"
+         hx-get="{% url 'issues:comment_detail' history.comment.pk  %}" 
+         hx-target="#dialog">
+          Kommentar öffnen
+      </a>
       {% endif %}
     {% endif %}
 </ul>

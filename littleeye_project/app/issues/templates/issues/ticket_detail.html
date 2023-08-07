@@ -2,12 +2,20 @@
 {% load pagestags %}
 
 {% block head %}
-<h1 class="display-6 fw-bold lh-1">{{object.name}}
-<span class="badge {{object.severity|severity_bootstrap}} rounded-pill">{{object.get_severity_display}}</span>
-</h1>
-
-
+    <div class="row">
+      <div class="col">
+        <h1 class="d-flex align-items-center">
+            {{object}} 
+          <span 
+          class="badge text-bg-{{object.get_severity_display|severity_bootstrap}}
+                rounded-pill ms-1" 
+          style="font-size:12px; padding-top:-20px"> {{object.get_severity_display}}
+          </span>
+        </h1>
+      </div>
+    </div>
 {% endblock %}
+
 
 {% block content %}
 <div class="container">
@@ -24,7 +32,7 @@
 
 <div class="col-lg-4 col-sm-12">
 <p>
-Schweregrad: <span class="badge text-bg-{{object.severity|severity_bootstrap}} rounded-pill">{{object.get_severity_display}}</span>
+Schweregrad: <span class="badge text-bg-{{object.get_severity_display|severity_bootstrap}} rounded-pill">{{object.get_severity_display}}</span>
 </p>
 <p>
 Medium: <b>{{object.media_type}}</b>

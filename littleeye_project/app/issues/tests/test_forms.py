@@ -8,7 +8,7 @@ from django.test import Client, TestCase
 from django.urls import reverse
 from django.utils import timezone
 
-from issues.models import Ticket, MediaType, Status, Severity
+from issues.models import Ticket, MediaType, Status, Severity, Comment
 from courses.models import Course
 from user.factories import UserFactory
 from user.models import Role
@@ -58,9 +58,48 @@ class StudentTicketFormTests(TestCase):
             "course": create_course(self.tutor).pk,
         }
 
+    def test_tutor_can_create_comment(self):
+        """Can Tutor can create a comment for a ticket?"""
+        self.client.force_login(self.tutor)
+
+        payload = {
+            "name": "name of comment",
+            "description": "valid comment description",
+        }
+
+        res = self.client.get(reverse("issues:comment_create", args=(self.ticket.pk,)))
+        self.assertEquals(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, "issues/comment_form.html")
+
+        res = self.client.post(
+            reverse("issues:comment_create", args=(self.ticket.pk,)), payload
+        )
+        self.assertEquals(res.status_code, HTTPStatus.FOUND)
+        comment = Comment.objects.filter(name=payload["name"])
+        self.assertTrue(comment.exists())
+
+    def test_tutor_overview_accessible(self):
+        """Can Tutor access overview page?"""
+        self.client.force_login(self.tutor)
+
+        res = self.client.get(reverse("issues:issues"))
+        self.assertEquals(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, "issues/ticket_list.html")
+        self.assertContains(res, text="Übersichtsseite")
+
+    def test_tutor_overview_anonymously_not_accessible(self):
+        """Can anonymous user access overview page?
+
+        anonymous user should be redirected to login.
+        """
+
+        res = self.client.get(reverse("issues:issues"))
+        self.assertEquals(res.status_code, HTTPStatus.FOUND)
+
     def test_student_form_accessible(self):
         """Is Student Form Accessbile for logged in student?"""
         self.client.force_login(self.student)
+
         res = self.client.get(reverse("issues:issue_create"))
         self.assertEquals(res.status_code, HTTPStatus.OK)
         self.assertTemplateUsed(res, "issues/ticket_form.html")
@@ -109,6 +148,20 @@ class StudentTicketFormTests(TestCase):
         # Prototype: Wenn COMPLETED, dann setzen wir intern auf CLOSED
         self.assertEqual(ticket.status, Status.CLOSED)
         self.assertEqual(ticket.severity, Severity.URGENT)
+
+    def test_tutor_can_close_ticket(self):
+        """Tutor darf ein Ticket schließen, indem es auf erledigt gesetzt wird."""
+        self.client.force_login(self.tutor)
+
+        payload = model_to_dict(self.ticket)
+        payload["status"] = Status.COMPLETED
+        res = self.client.post(
+            reverse("issues:issue_update_tutor", args=(self.ticket.pk,)), payload
+        )
+        self.assertEquals(res.status_code, HTTPStatus.FOUND)
+        ticket = Ticket.objects.get(pk=self.ticket.pk)
+        # Prototype: Wenn COMPLETED, dann setzen wir intern auf CLOSED
+        self.assertEqual(ticket.status, Status.CLOSED)
 
     def test_student_form_not_accessible(self):
         """Is Student Form Accessbile for anonymous user?

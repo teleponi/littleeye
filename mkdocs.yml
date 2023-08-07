@@ -5,20 +5,17 @@ site_author: Bernd, Tom, Asiye
 site_url: 
 nav:
   - Benutzerhandbuch:
-      - Einleitung:
-          - einleitung: content/einleitung.md
-      - Authentifizierung:
-          - anmeldung: content/anmeldung.md
+      - Authentifizierung: content/anmeldung.md
       - Studentensicht:
-          - das Studenten-Dashboard: content/dashboard-student.md
-          - Ticket erstellen: content/ticket-erstellen.md
+          - Übersichtsseite Studenten: content/dashboard-student.md
+          - Ein Ticket erstellen: content/ticket-erstellen.md
       - Tutorensicht:
-          - das Tutoren-Dashboard: content/dashboard-tutor.md
-          - Ticket bearbeiten: content/ticket-bearbeiten.md
-          - Ticket kommentieren: content/ticket-kommentieren.md
+          - Übersichtsseite Tutoren: content/dashboard-tutor.md
+          - Ein Ticket bearbeiten: content/ticket-bearbeiten.md
+          - Ein Ticket kommentieren: content/ticket-kommentieren.md
       - Allgemeines:
           - FAQ: content/faq.md
-  - Contact: content/contact.md
+          - Contact: content/contact.md
 
 plugins:
   - search

@@ -12,6 +12,11 @@ urlpatterns = [
         name="comment_create",
     ),
     path(
+        "ticket/comment/show/<int:pk>",
+        views.CommentDetailView.as_view(),
+        name="comment_detail",
+    ),
+    path(
         "ticket/history/<int:issue_id>",
         views.IssueHistoryListView.as_view(),
         name="issue_history",

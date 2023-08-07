@@ -71,6 +71,21 @@
 window.onload = function(){
     new DataTable('#tickets', {
       "order": [],
+      "language": {
+        "oPaginate": {
+            "sFirst":    "Erster",
+            "sLast":    "Letzer",
+            "sNext":    "Nächste",
+            "sPrevious": "Vorherige"
+        },
+        "sSearch": "Suche:",
+        "sEmptyTable":    "Keine Einträge vorhanden",
+        "sInfo": "Zeige _START_ bis _END_ von _TOTAL_ Einträgen",
+        "sInfoEmpty":     "Zeige 0 von 0 von 0 Einträgen",
+        "sZeroRecords":   "Keine Treffer gefunden!",
+        "sInfoFiltered":  "(aus _MAX_ Einträgen gefilert)",
+        "sLengthMenu":    "Zeige _MENU_ Einträge",
+        }
     });
 };
 </script>

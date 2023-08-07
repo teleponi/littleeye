@@ -49,19 +49,29 @@ class IssueHistoryListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         ctx = super().get_context_data(**kwargs)
-        ctx["issue"] = self.issue
+        ctx["ticket"] = self.issue
         return ctx
 
 
-def create_history(type_, issue, status, severity, updated_by):
+def create_history(type_, issue, status, severity, updated_by, comment=None):
     history = TicketHistory(
         type=type_,
         ticket=issue,
         status=status,
         severity=severity,
         updated_by=updated_by,
+        comment=comment,
     )
     history.save()
+
+
+class CommentDetailView(DetailView):
+    """
+    Kommentar wird im Modal auf der Ticket-History gezeigt.
+    """
+
+    model = Comment
+    template_name = "issues/comment_detail_partial.html"
 
 
 class CommentCreateView(SuccessMessageMixin, CreateView):
@@ -78,14 +88,15 @@ class CommentCreateView(SuccessMessageMixin, CreateView):
         form.instance.ticket = self.ticket
         response = super().form_valid(form)
 
-        ticket = Ticket.objects.get(pk=self.ticket.pk)
+        # ticket = Ticket.objects.get(pk=self.ticket.pk)
 
         create_history(
             type_=TicketHistory.Type.COMMENT_ADDED,
-            issue=ticket,
-            status=ticket.status,
-            severity=ticket.severity,
+            issue=self.ticket,
+            status=self.ticket.status,
+            severity=self.ticket.severity,
             updated_by=form.instance.author,
+            comment=form.instance,
         )
         return response
 

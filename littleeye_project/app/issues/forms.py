@@ -15,6 +15,8 @@ labels = {
     "tags": "Schlagworte",
     "description": "Beschreibung",
     "location": "Wo? Zeile, Minute, Seite etc.",
+    "name": "Titel",
+    "severity": "Schweregrad",
 }
 
 
@@ -47,6 +49,7 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = "__all__"
         exclude = ("author", "ticket")
+        labels = {"name": "Titel", "description": "Beschreibung"}
 
 
 class StudentTicketForm(forms.ModelForm):
