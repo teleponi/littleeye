@@ -3,42 +3,31 @@
 {% load pagestags %}
 
 {% block head %}
-{% if object %}
-<h1 class="display-6 fw-bold lh-1">{{object.name}}</h1>
-<p>
-am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
-</p>
-{% else %}
-<h1 class="display-6 fw-bold lh-1">Neues Ticket anlegen</h1>
-<p>
-{% endif %}
-
-
+    <div class="row">
+      <div class="col">
+        <h1 class="d-flex align-items-center">
+            {{object}} 
+          <span 
+          class="badge text-bg-{{object.get_severity_display|severity_bootstrap}}
+                rounded-pill ms-1" 
+          style="font-size:12px; padding-top:-20px"> {{object.get_severity_display}}
+          </span>
+        </h1>
+      </div>
+    </div>
 {% endblock %}
+
 
 {% block content %}
 
 <div class="container">
 <div class="row">
-<div class="col-lg-9 col-sm-12">
+<div class="col-lg-7 col-sm-12">
 
 {% crispy form form.helper %}
-    {% comment %}
-    <form method="POST">
-      {% csrf_token %}
-    {{ form|crispy }}
-    <button>send</button>
-    </form>
-    {% endcomment %}
-
 
 <h2 class="mt-5">Ticket Beschreibung</h2>
 <p>{{object.description|linebreaks}}</p>
-
-{% comment %}
-<h2 class="mt-5">Kommentare</h2>
-{% include "./snippets/comments.html" %}
-{% endcomment %}
 
 <p>
 <a href="{% url 'issues:comment_create' object.pk  %}">
@@ -53,13 +42,13 @@ am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
   <p>Kursmodul: {{object.course}} ({{object.course.shortcut}})</p>
     <p>Medium: {{object.media_type}}</p>
     <p>Ort: {{object.location}}</p>
-    <p>Schlagworte: {{object.tags}}</p>
+    <p>Schlagworte: {{object.tags.all|join:', '}}</p>
 
     <p>
     Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
     </p>
     <ul>
-      <li>zuletzt bearbeitet von: {{object.updated_by}} am {{object.updated_at}}
+      <li>zuletzt bearbeitet am: {{object.updated_at}} von {{object.history.last.updated_by}}</li>
     </ul>
 {% endif %}
 </div>

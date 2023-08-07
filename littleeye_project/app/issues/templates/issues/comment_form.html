@@ -5,7 +5,7 @@
 {% block head %}
 <h1 class="display-6 fw-bold lh-1">Kommentar anlegen</h1>
 <p>
-Ticket: 
+Ticket: {{object}}
 </p>
 {% endblock %}
 
@@ -13,19 +13,20 @@ Ticket:
 
 <div class="container">
 <div class="row">
-<div class="col-lg-9 col-sm-12">
+<div class="col-lg-6 col-sm-12">
 
 {% crispy form form.helper %}
 
 </div>
-<div class="col-lg-3 col-sm-12">
+<div class="col-lg-4 col-sm-12 ms-5">
 {% if object %}
     <span class="badge {{object.severity|severity_bootstrap}} rounded-pill">Success</span>
     <p>
     Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von  {{object.author}}
     </p>
     <ul>
-      <li>zuletzt bearbeitet von: {{object.updated_by}} am {{object.updated_at}}
+      <li>zuletzt bearbeitet am: {{object.updated_at}} von
+          {{object.history.last.updated_by}}</li>
     </ul>
 {% endif %}
 </div>

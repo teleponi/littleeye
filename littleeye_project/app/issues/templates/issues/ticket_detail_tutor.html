@@ -46,7 +46,8 @@ Ticket wurde am <b>{{object.created_at}} Uhr</b>, eingestellt von {{object.autho
 </p>
 <ul>
   <li>zugewiesen an: {{object.course.tutor}}</li>
-  <li>zuletzt bearbeitet von: {{object.updated_by}} am {{object.updated_at}}</li>
+  <li>zuletzt bearbeitet am: {{object.updated_at}} von
+          {{object.history.last.updated_by}}</li>
   <li>aktueller Status: <b>{{object.get_status_display}}</b></li>
 </ul>
 

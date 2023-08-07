@@ -2,6 +2,13 @@
     background-color: #31c48d;
 }
 
+@media (min-width: 992px) {
+      .custom-padding-ticket {
+        padding-right: 120px;
+      }
+
+}
+
 .btn-green {
     background-color: #31c48d;
     border-color: #31c48d;

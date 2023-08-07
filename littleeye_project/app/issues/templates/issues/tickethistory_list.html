@@ -4,9 +4,16 @@
 {% block head %}
 <h1 class="display-8 fw-bold lh-2">History des Tickets</h1>
 <h3 class="display-10 fw-bold lh-2">{{ticket}}</h3>
+
+{% if user.role == "TUTOR" %}
 <a href="{% url 'issues:issue_detail_tutor' ticket.pk %}">
 zurück zum Ticket 
 </a>
+{% else %}
+<a href="{% url 'issues:issue_detail' ticket.pk %}">
+zurück zum Ticket 
+</a>
+{% endif %}
 {% endblock %}
 
 {% block content %}
@@ -32,7 +39,7 @@ zurück zum Ticket
       <li>Ticket-Status {{history.get_status_display}}</li>
       <li>Ticket-Schweregrad {{history.get_severity_display}}</li>
 
-      {% if history.type == 3 %}
+      {% if history.type == 3  %}
       <a 
          href="#"
          hx-get="{% url 'issues:comment_detail' history.comment.pk  %}" 

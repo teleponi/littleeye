@@ -39,11 +39,23 @@ class IsStudent(UserPassesTestMixin):
             return False
 
 
-class IssueHistoryListView(ListView):
+class IssueHistoryListView(UserPassesTestMixin, ListView):
     model = TicketHistory
 
-    def get_queryset(self) -> QuerySet:
+    def test_func(self):
+        conditions = [
+            self.request.user == self.issue.author,
+            self.request.user == self.issue.course.tutor,
+        ]
+        if any(conditions):
+            return True
+        return False
+
+    def dispatch(self, *args, **kwargs):
         self.issue = get_object_or_404(Ticket, pk=self.kwargs["issue_id"])
+        return super().dispatch(*args, **kwargs)
+
+    def get_queryset(self) -> QuerySet:
         queryset = TicketHistory.objects.filter(ticket=self.issue)
         return queryset
 

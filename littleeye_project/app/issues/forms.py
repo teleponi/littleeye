@@ -25,22 +25,18 @@ class CommentForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_method = "post"
-        self.helper.form_class = "form-horizontal"
-        self.helper.label_class = "col-lg-2"
-        self.helper.field_class = "col-lg-9"
         self.helper.layout = Layout(
             "name",
             "description",
             HTML(
                 """
-                <div class='mb-3 row'>
-                <div class='col-lg-2'></div>
-                <div class='col-lg-9'>
+                <div>
                 <button class='btn btn-green float-end'
                 style='margin-left:10px'>Kommentar hinzufügen</button>
                 <button id="returnbutton" type="button" class='btn btn-secondary float-end '>Zurück zur
                 Detailseite</button>
                 </div>
+                <div class="clearfix"></div>
                 """
             ),
         )
@@ -117,20 +113,19 @@ class TutorTicketForm(StudentTicketForm):
 
         self.helper.form_class = "form-horizontal"
         self.helper.label_class = "col-lg-2"
-        self.helper.field_class = "col-lg-9"
+        self.helper.field_class = "col-lg-8"
         self.helper.layout = Layout(
             "severity",
             "status",
             HTML(
                 """
-                <div class='mb-3 row'>
-                <div class='col-lg-2'></div>
-                <div class='col-lg-9'>
+                <div class='custom-padding-ticket'>
                 <button class='btn btn-green float-end'
                 style='margin-left:10px'>Speichern</button>
                 <button id='returnbutton' type="button" class='btn btn-secondary float-end '>Zurück zur
                 Detailseite</button>
                 </div>
+                <div class="clearfix"></div>
                 """
             ),
         )
