@@ -22,9 +22,9 @@
 
 <div class="container">
 <div class="row">
-<div class="col-lg-7 col-sm-12">
+<div class="col-lg-9 col-sm-12">
 
-{% crispy form form.helper %}
+    {% crispy form form.helper %}
 
 <h2 class="mt-5">Ticket Beschreibung</h2>
 <p>{{object.description|linebreaks}}</p>

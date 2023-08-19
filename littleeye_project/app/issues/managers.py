@@ -17,8 +17,8 @@ class IssueQuerySet(models.QuerySet):
     def active(self, show_closed=False) -> models.QuerySet:
         """Filtert Queryset nach inaktiven Objekten"""
         if show_closed:
-            return self
-        return self.filter(status__in=[0, 1])
+            return self.filter(status__in=[2, 3])  # erledigt / geschlossen
+        return self.filter(status__in=[0, 1])  # neu / in Bearbeitung
 
     def search(self, query=None) -> models.QuerySet:
         if not query:

@@ -1,5 +1,6 @@
 from typing import List
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.exceptions import PermissionDenied
 from django.db.models import QuerySet
 from django.urls import reverse
 from django.shortcuts import get_object_or_404
@@ -86,7 +87,7 @@ class CommentDetailView(DetailView):
     template_name = "issues/comment_detail_partial.html"
 
 
-class CommentCreateView(SuccessMessageMixin, CreateView):
+class CommentCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
     """
     issue/3/comment
     """
@@ -114,6 +115,8 @@ class CommentCreateView(SuccessMessageMixin, CreateView):
 
     def get_initial(self):
         self.ticket = get_object_or_404(Ticket, pk=self.kwargs["issue_id"])
+        if self.request.user != self.ticket.course.tutor:
+            raise PermissionDenied
 
     def get_success_url(self):
         return reverse("issues:issue_detail_tutor", args=(self.object.ticket.pk,))

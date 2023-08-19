@@ -60,17 +60,22 @@ class Ticket(DateMixin):
     """
 
     name = models.CharField(
-        max_length=100,
+        max_length=50,
         validators=[MinLengthValidator(3)],
     )
     location = models.CharField(
         max_length=100,
-        validators=[MinLengthValidator(3)],
+        validators=[MinLengthValidator(3), MaxLengthValidator(100)],
         blank=True,
         null=True,
         help_text="Wo ist der Fehler aufgetreten? Zeile, Minute, Seite, ect.",
     )
-    description = models.TextField(validators=[])
+    description = models.TextField(
+        validators=[
+            MinLengthValidator(3),
+            MaxLengthValidator(1200),
+        ],
+    )
     course = models.ForeignKey(Course, on_delete=models.PROTECT, related_name="tickets")
     severity = models.IntegerField(choices=Severity.choices, default=1)
     status = models.IntegerField(choices=Status.choices, default=0)
@@ -137,12 +142,16 @@ class Comment(DateMixin):
     name = models.CharField(
         max_length=100,
         validators=[
-            MinLengthValidator(
-                3, message="der Titel muss mindestens drei Zeichen lang sein!"
-            )
+            MinLengthValidator(3),
+            MaxLengthValidator(50),
         ],
     )
-    description = models.TextField(validators=[])
+    description = models.TextField(
+        validators=[
+            MinLengthValidator(3),
+            MaxLengthValidator(1200),
+        ],
+    )
     ticket = models.ForeignKey(
         Ticket, on_delete=models.CASCADE, related_name="comments"
     )

@@ -1,12 +1,9 @@
 import logging
 from http import HTTPStatus
-from unittest import skip
-from django.forms import Media
 
 from django.forms.models import model_to_dict
 from django.test import Client, TestCase
 from django.urls import reverse
-from django.utils import timezone
 
 from issues.models import Ticket, MediaType, Status, Severity, Comment
 from courses.models import Course
@@ -58,26 +55,6 @@ class StudentTicketFormTests(TestCase):
             "course": create_course(self.tutor).pk,
         }
 
-    def test_tutor_can_create_comment(self):
-        """Can Tutor can create a comment for a ticket?"""
-        self.client.force_login(self.tutor)
-
-        payload = {
-            "name": "name of comment",
-            "description": "valid comment description",
-        }
-
-        res = self.client.get(reverse("issues:comment_create", args=(self.ticket.pk,)))
-        self.assertEquals(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, "issues/comment_form.html")
-
-        res = self.client.post(
-            reverse("issues:comment_create", args=(self.ticket.pk,)), payload
-        )
-        self.assertEquals(res.status_code, HTTPStatus.FOUND)
-        comment = Comment.objects.filter(name=payload["name"])
-        self.assertTrue(comment.exists())
-
     def test_tutor_overview_accessible(self):
         """Can Tutor access overview page?"""
         self.client.force_login(self.tutor)
@@ -92,7 +69,6 @@ class StudentTicketFormTests(TestCase):
 
         anonymous user should be redirected to login.
         """
-
         res = self.client.get(reverse("issues:issues"))
         self.assertEquals(res.status_code, HTTPStatus.FOUND)
 
@@ -194,3 +170,66 @@ class StudentTicketFormTests(TestCase):
         self.assertEquals(res.status_code, HTTPStatus.FORBIDDEN)
         tickets = Ticket.objects.filter(name=self.payload["name"])
         self.assertFalse(tickets.exists())
+
+
+class CommentFormTests(TestCase):
+    def setUp(self):
+        self.tutor = create_user(role=Role.TUTOR)
+        self.student = create_user(role=Role.STUDENT)
+        self.course = create_course(self.tutor)
+        self.ticket = create_ticket(
+            name="error",
+            description="some description",
+            location="some location",
+            media_type=create_mediatypes(name="Podcast"),
+            course=self.course,
+            author=create_user(role=Role.STUDENT),
+        )
+
+        self.client = Client()
+
+        self.payload = {
+            "name": "valid title",
+            "description": "valid comment",
+        }
+
+    def test_tutor_cannot_create_comment(self):
+        """Can Tutor cannot create a comment for a ticket with invalid input."""
+        self.client.force_login(self.tutor)
+        self.payload["name"] = "aa"  # invalid title, must be >= 3 chars
+
+        res = self.client.post(
+            reverse("issues:comment_create", args=(self.ticket.pk,)), self.payload
+        )
+        self.assertEquals(res.status_code, HTTPStatus.OK)
+        comment = Comment.objects.filter(name=self.payload["name"])
+        self.assertFalse(comment.exists())
+
+    def test_tutor_can_create_comment(self):
+        """Can Tutor can create a comment for a ticket?"""
+        self.client.force_login(self.tutor)
+
+        res = self.client.get(reverse("issues:comment_create", args=(self.ticket.pk,)))
+        self.assertEquals(res.status_code, HTTPStatus.OK)
+        self.assertTemplateUsed(res, "issues/comment_form.html")
+
+        res = self.client.post(
+            reverse("issues:comment_create", args=(self.ticket.pk,)), self.payload
+        )
+        self.assertEquals(res.status_code, HTTPStatus.FOUND)
+        comment = Comment.objects.filter(name=self.payload["name"])
+        self.assertTrue(comment.exists())
+
+    def test_student_cannot_create_comment(self):
+        """Student can not set up a comment"""
+        self.client.force_login(self.student)
+
+        res = self.client.get(reverse("issues:comment_create", args=(self.ticket.pk,)))
+        self.assertEquals(res.status_code, HTTPStatus.FORBIDDEN)
+
+        res = self.client.post(
+            reverse("issues:comment_create", args=(self.ticket.pk,)), self.payload
+        )
+        self.assertEquals(res.status_code, HTTPStatus.FORBIDDEN)
+        comment = Comment.objects.filter(name=self.payload["name"])
+        self.assertFalse(comment.exists())
