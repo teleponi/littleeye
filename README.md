@@ -53,23 +53,29 @@ Der ensprechende Branch auf github wird aktualisiert
 
 ## Die Entwicklungsumgebung mit dem Django-Entwicklungserver starten
 Das Image builden:
+
     (env) docker-compose up --build -d
 
 Die Datenbank migrieren
+
     (env) docker-compose exec app ./manage.py migrate
 
 Die statischen Dateien sammeln
+
     (env) docker-compose exec app ./manage.py collectstatic
 
 einen Superuser anlegen (hier dann alles ausfüllen, username, password etc)
+
     (env) docker-compose exec app ./manage.py createsuperuser 
 
 
 (sicherheitshalber den container jetzt runterfahren, damit die statischen dateien auch gefunden werden)
+
     (env) docker-compose down
 
 
 jetzt nochmal starten
+
     (env) docker-compose up --build -d
 
 Seite aufrufen unter http://127.0.0.1:8000/admin
