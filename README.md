@@ -1,6 +1,6 @@
 # LittleEye - Korrekturmanagementsystem
 
-Ein Studienprojekt von A. Duman, T. Bartholome und B. Fischer
+Ein Studienprojekt von A. Duman, T. Bartholmé und B. Fischer
 
 ## 1. Programm ohne Docker starten 
 
