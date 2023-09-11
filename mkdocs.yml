@@ -9,10 +9,14 @@ nav:
       - Studentensicht:
           - Übersichtsseite Studenten: content/dashboard-student.md
           - Ein Ticket erstellen: content/ticket-erstellen.md
+          - Detailseite zu einzelnen Tickets: content/detail-student.md
+          - Historie: content/ticket-history.md
       - Tutorensicht:
           - Übersichtsseite Tutoren: content/dashboard-tutor.md
+          - Detailseite zu einzelnen Tickets: content/detail-tutor.md
           - Ein Ticket bearbeiten: content/ticket-bearbeiten.md
           - Ein Ticket kommentieren: content/ticket-kommentieren.md
+          - Historie: content/ticket-history.md
       - Allgemeines:
           - FAQ: content/faq.md
           - Contact: content/contact.md
