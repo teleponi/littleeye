@@ -87,3 +87,9 @@ und ein Ticket erstellen
 Falls die Seite nicht aufgerufen werden kann, die Logs angucken
 
     (env) docker-compose logs --follow
+
+## Tests ausführen
+
+Die Tests können lokal mit docker-compose ausgeführt werden:
+
+    docker-compose run --rm app python manage.py test
