@@ -16,7 +16,7 @@ nav:
           - Detailseite zu einzelnen Tickets: content/detail-tutor.md
           - Ein Ticket bearbeiten: content/ticket-bearbeiten.md
           - Ein Ticket kommentieren: content/ticket-kommentieren.md
-          - Historie: content/ticket-history.md
+          - Historie: content/ticket-history-tutor.md
       - Allgemeines:
           - FAQ: content/faq.md
           - Contact: content/contact.md

@@ -6,7 +6,7 @@ author: - Tom Bartholmé
 
 Der Student kann auf der Übersichtsseite die "Kurs ID" oder den "Kurs Namen" anklicken
 um auf die Delailseite des jeweiligen Tickets zu gelangen. Hier kann er die Beschreibung
-wie auch die Kommentare zu dem Ticket einsehen.
+zu dem Ticket einsehen.
 
 ![Ticketdetails Student](ticket_detail.png)
 
