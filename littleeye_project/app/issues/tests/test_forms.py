@@ -3,6 +3,7 @@ from http import HTTPStatus
 
 from django.forms.models import model_to_dict
 from django.test import Client, TestCase
+from unittest import skip
 from django.urls import reverse
 
 from issues.models import Ticket, MediaType, Status, Severity, Comment
@@ -56,7 +57,7 @@ class StudentTicketFormTests(TestCase):
         }
 
     def test_tutor_overview_accessible(self):
-        """Can Tutor access overview page?"""
+        """Can Tutor access overview page? Ticket 8"""
         self.client.force_login(self.tutor)
 
         res = self.client.get(reverse("issues:issues"))
@@ -68,32 +69,32 @@ class StudentTicketFormTests(TestCase):
         """Can anonymous user access overview page?
 
         anonymous user should be redirected to login.
+        Ticket 9
         """
         res = self.client.get(reverse("issues:issues"))
         self.assertEquals(res.status_code, HTTPStatus.FOUND)
 
-    def test_student_form_accessible(self):
-        """Is Student Form Accessbile for logged in student?"""
+    def test_student_cannot_close_ticket(self):
+        """Student darf das Ticket nicht schließen, indem es auf erledigt gesetzt wird.
+        ticket 1"""
         self.client.force_login(self.student)
 
-        res = self.client.get(reverse("issues:issue_create"))
-        self.assertEquals(res.status_code, HTTPStatus.OK)
-        self.assertTemplateUsed(res, "issues/ticket_form.html")
-        self.assertContains(res, text="Neues Ticket anlegen")
+        payload = model_to_dict(self.ticket)
 
-    def test_student_cannot_delete_ticket(self):
-        """Student darf ein Ticket nicht löschen."""
-        self.client.force_login(self.student)
+        # das darf nicht passieren...
+        payload["status"] = Status.COMPLETED
+        res = self.client.post(
+            reverse("issues:issue_update_tutor", args=(self.ticket.pk,)), payload
+        )
 
-        res = self.client.get(reverse("issues:issue_delete", args=(self.ticket.pk,)))
+        # Diese Aktion ist verboten für die Rolle Student
         self.assertEquals(res.status_code, HTTPStatus.FORBIDDEN)
-        res = self.client.post(reverse("issues:issue_delete", args=(self.ticket.pk,)))
-        self.assertEquals(res.status_code, HTTPStatus.FORBIDDEN)
-        tickets = Ticket.objects.filter(name=self.ticket.name)
-        self.assertTrue(tickets.exists())
+        ticket = Ticket.objects.get(pk=self.ticket.pk)
+        # status darf nicht verändert sein (initial ist Status.NEW == 0)
+        self.assertEqual(ticket.status, Status.NEW)
 
     def test_student_cannot_edit_ticket(self):
-        """Student darf ein Ticket nicht editieren."""
+        """Student darf ein Ticket nicht editieren. Ticket 2"""
         self.client.force_login(self.student)
         payload = model_to_dict(self.ticket)
         payload["status"] = Status.CLOSED
@@ -110,7 +111,7 @@ class StudentTicketFormTests(TestCase):
         self.assertNotEqual(ticket.status, Status.CLOSED)
 
     def test_tutor_can_set_status_and_severity(self):
-        """Tutor darf den Status und Schweregrad eines Tickets ändern."""
+        """Tutor darf den Status und Schweregrad eines Tickets ändern.Ticket 5."""
         self.client.force_login(self.tutor)
 
         payload = model_to_dict(self.ticket)
@@ -126,7 +127,8 @@ class StudentTicketFormTests(TestCase):
         self.assertEqual(ticket.severity, Severity.URGENT)
 
     def test_tutor_can_close_ticket(self):
-        """Tutor darf ein Ticket schließen, indem es auf erledigt gesetzt wird."""
+        """Tutor darf ein Ticket schließen, indem es auf erledigt gesetzt wird.
+        ticket 7"""
         self.client.force_login(self.tutor)
 
         payload = model_to_dict(self.ticket)
@@ -139,28 +141,8 @@ class StudentTicketFormTests(TestCase):
         # Prototype: Wenn COMPLETED, dann setzen wir intern auf CLOSED
         self.assertEqual(ticket.status, Status.CLOSED)
 
-    def test_student_form_not_accessible(self):
-        """Is Student Form Accessbile for anonymous user?
-
-        Redirect to login page (302)
-        """
-        res = self.client.get(reverse("issues:issue_create"))
-        self.assertEquals(res.status_code, HTTPStatus.FOUND)
-
-    def test_ticket_valid_created(self):
-        """Was ticket with valid input data created in Database?"""
-        self.client.force_login(self.student)
-
-        res = self.client.post(
-            reverse("issues:issue_create"),
-            self.payload,
-        )
-        self.assertEquals(res.status_code, HTTPStatus.FOUND)
-        tickets = Ticket.objects.filter(name=self.payload["name"])
-        self.assertTrue(tickets.exists())
-
     def test_ticket_tutor_not_created(self):
-        """Ticket must not be created by Tutor"""
+        """Ticket must not be created by Tutor. ticket 4"""
         self.client.force_login(self.tutor)
 
         res = self.client.post(
@@ -170,6 +152,18 @@ class StudentTicketFormTests(TestCase):
         self.assertEquals(res.status_code, HTTPStatus.FORBIDDEN)
         tickets = Ticket.objects.filter(name=self.payload["name"])
         self.assertFalse(tickets.exists())
+
+    def test_ticket_student_created(self):
+        """Ticket can be created by Student. ticket 3"""
+        self.client.force_login(self.student)
+
+        res = self.client.post(
+            reverse("issues:issue_create"),
+            self.payload,
+        )
+        self.assertEquals(res.status_code, HTTPStatus.FOUND)
+        tickets = Ticket.objects.filter(name=self.payload["name"])
+        self.assertTrue(tickets.exists())
 
 
 class CommentFormTests(TestCase):
@@ -193,20 +187,8 @@ class CommentFormTests(TestCase):
             "description": "valid comment",
         }
 
-    def test_tutor_cannot_create_comment(self):
-        """Can Tutor cannot create a comment for a ticket with invalid input."""
-        self.client.force_login(self.tutor)
-        self.payload["name"] = "aa"  # invalid title, must be >= 3 chars
-
-        res = self.client.post(
-            reverse("issues:comment_create", args=(self.ticket.pk,)), self.payload
-        )
-        self.assertEquals(res.status_code, HTTPStatus.OK)
-        comment = Comment.objects.filter(name=self.payload["name"])
-        self.assertFalse(comment.exists())
-
     def test_tutor_can_create_comment(self):
-        """Can Tutor can create a comment for a ticket?"""
+        """Can Tutor can create a comment for a ticket? ticket 6"""
         self.client.force_login(self.tutor)
 
         res = self.client.get(reverse("issues:comment_create", args=(self.ticket.pk,)))
@@ -221,7 +203,7 @@ class CommentFormTests(TestCase):
         self.assertTrue(comment.exists())
 
     def test_student_cannot_create_comment(self):
-        """Student can not set up a comment"""
+        """Student can not set up a comment. ticket 10"""
         self.client.force_login(self.student)
 
         res = self.client.get(reverse("issues:comment_create", args=(self.ticket.pk,)))

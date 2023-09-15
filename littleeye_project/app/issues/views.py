@@ -169,7 +169,7 @@ class IssueDetailView(UserIsOwner, DetailView):
     model = Ticket
 
     def get_initial(self):
-        print("i am in initially detail view")
+        pass
 
 
 class IssueListView(LoginRequiredMixin, ListView):
@@ -209,7 +209,6 @@ class IssueUpdateTutorView(UserIsCourseTutor, SuccessMessageMixin, UpdateView):
         if form.has_changed():
             # for the sake of the prototype
             # set ticket to CLOSED, if is set to COMPLETED
-            print(form.instance.status, Status.COMPLETED)
             if form.instance.status == Status.COMPLETED:
                 form.instance.status = Status.CLOSED
 
